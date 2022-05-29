@@ -651,3 +651,435 @@ $(function() {
        
     });
     
+7.jQuery内容文本属性
+主要对元素内容还有表单的值操作
+1.普通元素内容html()（相当于原生inner HTML）
+<
+    <div>
+        <span>我是内容</span>
+    </div>
+    <input type="text" value="请输入内容">
+    <script>
+        // 1. 获取设置元素的内容 html()[相当于原生innerHTML]
+        console.log($("div").html());
+        // $("div").html("123");修改设置元素的内容：变成<div>123</div>
+        // 2. 获取设置元素的文本内容(只获取文本内容，不获得标签) text() [相当于原生innerText]
+        console.log($("div").text());
+        $("div").text("123");修改设置元素的文本内容：变成<div>123</div>
+
+
+        // 3. 获取设置表单值 val()
+        console.log($("input").val());
+        $("input").val("123"); 修改设置表单值
+    </script>
+</body>
+
+
+
+案例：购物车案例模块-增减商品数量
+
+
+1.核心思路：首先声明一个变量，当我们点击+号（increment），就让这个值++，然后赋值给文本框
+2.注意1：只能增加本商品数量，就是当前+号的兄弟文本框（itxt）的值
+3.修改表单的值是val（）方法
+4.注意2：这个变量的初始值应该是文本框的值，在这个值基础上++，所以要获取表单的值
+5.减号（decrement）思路同理，但如果文本框的值是1，就不能再减了
+// 3. 增减商品数量模块 首先声明一个变量，当我们点击+号（increment），就让这个值++，然后赋值给文本框。
+    $(".increment").click(function() {
+        // 得到当前兄弟文本框的值
+        var n = $(this).siblings(".itxt").val();
+        // console.log(n);
+        n++;
+        $(this).siblings(".itxt").val(n);
+        
+    });
+    $(".decrement").click(function() {
+        // 得到当前兄弟文本框的值
+        var n = $(this).siblings(".itxt").val();
+        if (n == 1) {
+            return false;//代码中遇到return后面的代码就不再会去执行了(在本次事件里)
+        }
+        // console.log(n);
+        n--;
+        $(this).siblings(".itxt").val(n);
+        
+    });
+   
+})
+案例：购物车案例模块-修改商品小计
+核心思路：每次点击+号或者-号，根据文本框的值乘以当前的商品的价格 就是商品的小计
+注意1：只能增加本商品的小计，就是当前商品的小计模块（p-sum）
+修改普通元素的内容是text（）方法
+注意2：当前商品的价格，要把￥符号去掉再相乘截取字符串substr（1）
+parents（‘选择器’）刻意返回指定的祖先元素
+toFixed(2) 可以让我们保留2位小数
+用户也可以修改表单文本框的值，同样要计算小计，用表单change事件  
+用最新的表单内的值乘以单价即可，但还是计算的当前商品小计
+
+
+// 3. 增减商品数量模块 首先声明一个变量，当我们点击+号（increment），就让这个值++，然后赋值给文本框。
+    $(".increment").click(function() {
+        // 得到当前兄弟文本框的值
+        var n = $(this).siblings(".itxt").val();
+        // console.log(n);
+        n++;
+        $(this).siblings(".itxt").val(n);
+        // 3. 计算小计模块 根据文本框的值 乘以 当前商品的价格  就是 商品的小计
+        // 当前商品的价格 p 
+        //  var p = $(this).parent().parent().siblings(".p-price").html();与下一行等价
+
+        var p = $(this).parents(".p-num").siblings(".p-price").html();
+        // console.log(p);
+        p = p.substr(1);
+        console.log(p);
+        var price = (p * n).toFixed(2);
+        // 小计模块 
+        // toFixed(2) 可以让我们保留2位小数
+        $(this).parents(".p-num").siblings(".p-sum").html("￥" + price);
+        getSum();
+    });
+    $(".decrement").click(function() {
+        // 得到当前兄弟文本框的值
+        var n = $(this).siblings(".itxt").val();
+        if (n == 1) {
+            return false;//代码中遇到return后面的代码就不再会去执行了(在本次事件里)
+        }
+        // console.log(n);
+        n--;
+        $(this).siblings(".itxt").val(n);
+        // var p = $(this).parent().parent().siblings(".p-price").html();
+        // parents(".p-num") 返回指定的祖先元素
+        var p = $(this).parents(".p-num").siblings(".p-price").html();
+        // console.log(p);
+        p = p.substr(1);
+        console.log(p);
+        // 小计模块 
+        $(this).parents(".p-num").siblings(".p-sum").html("￥" + (p * n).toFixed(2));
+        getSum();
+    });
+    //  4. 用户修改文本框的值 计算 小计模块  
+    $(".itxt").change(function() {
+        // 先得到文本框的里面的值 乘以 当前商品的单价 
+        var n = $(this).val();
+        // 当前商品的单价
+        var p = $(this).parents(".p-num").siblings(".p-price").html();
+        // console.log(p);
+        p = p.substr(1);
+        $(this).parents(".p-num").siblings(".p-sum").html("￥" + (p * n).toFixed(2));
+        getSum();
+    });
+   
+  
+8.jQuery元素操作
+主要是遍历、创建、添加、删除元素操作
+8.1遍历元素
+jQuery隐式迭代是对同一类元素做了同样的操作。如果想要给同一类元素做不同操作，就要用到遍历。
+语法一：$(''div'').each(function (index,domEle){xxx;})
+1.each()方法遍历匹配的每一个元素。主要用DOM处理。each 每一个（类似for，但是比for强大,都是对每一个元素依次遍历操作）
+2.里面的回调函数有两个参数：index是每个元素的索引号；demEle是每个DOM元素对象，不是jQuery对象
+3.所以要想使用jquery方法，需要给这个DOM元素转换为jquery对象$(domEle)
+
+<
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <script>
+        $(function() {
+            // $("div").css("color", "red");
+            // 如果针对于同一类元素做不同操作，需要用到遍历元素（类似for，但是比for强大）
+            var sum = 0;
+            // 1. each() 方法遍历元素 
+            var arr = ["red", "green", "blue"];
+            $("div").each(function(i, domEle) {
+                // 回调函数第一个参数一定是索引号  可以自己指定索引号号名称
+                // console.log(index);
+                 console.log(i);
+                // 回调函数第二个参数一定是 dom元素对象 也是自己命名
+                // console.log(domEle);
+                // domEle.css("color"); dom对象没有css方法
+                $(domEle).css("color", arr[i]);
+                sum += parseInt($(domEle).text());//一定要转化成数字型，因为在元素里它们都是字符型的，直接相加就是字符串拼接
+            })
+            console.log(sum);
+            // 2. $.each() 方法遍历元素 主要用于遍历数据，处理数据
+            // $.each($("div"), function(i, ele) {
+            //     console.log(i);
+            //     console.log(ele);
+
+            // });
+            // $.each(arr, function(i, ele) {
+            //     console.log(i);
+            //     console.log(ele);
+
+
+            // })
+            $.each({
+                name: "andy",
+                age: 18
+            }, function(i, ele) {
+                console.log(i); // 输出的是 name age 属性名
+                console.log(ele); // 输出的是 andy  18 属性值
+
+
+            })
+        })
+    </script>
+注意：同for循环一样，一个元素遍历完以后再继续遍历下一个元素
+
+
+语法二：$.each(object,function(index,element){xxx;})
+1.$.each()方法可用于遍历任何对象。主要用于数据处理，比如数组，对象
+2.里面的函数有两个参数：index是每个元素的索引号；element遍历内容
+ <
+ <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <script>
+     
+             var arr = ["red", "green", "blue"];   
+            // 2. $.each() 方法遍历元素 主要用于遍历数据，处理数据
+            //1.遍历DOM元素
+             $.each($("div"), function(i, ele) {
+                 console.log(i);
+                 console.log(ele);
+
+             });
+             $.each(arr, function(i, ele) {
+                 console.log(i);
+                 console.log(ele);
+
+
+             })
+            $.each({
+                name: "andy",
+                age: 18
+            }, function(i, ele) {
+                console.log(i); // 输出的是 name age 属性名
+                console.log(ele); // 输出的是 andy  18 属性值
+
+
+            })
+        })
+    </script>
+
+
+
+
+
+
+案例：购物车模块-计算总件数和总额
+1.核心思路：把所有文本框里面的值相加就是总计数量。总额同理
+2.文本框里面的值不相同，如果想要相加需要用到each遍历。声明一个变量，相加即可
+3.点击+-，会改变总计和总额，如果用户修改了文本框里面的值同样会改变总计和总额
+4.因此可以封装一个函数求总计和总额的，以上两个操作调用这个函数即可
+5.注意1：总计是文本框里面的值相加用val（） 总额是普通元素的内容用text（）
+6.要注意普通元素里面的内容要去掉￥并且转换成数字型才能相加
+ // 5. 计算总计和总额模块
+    getSum();
+
+    function getSum() {
+        var count = 0; // 计算总件数 
+        var money = 0; // 计算总价钱
+        $(".itxt").each(function(i, ele) {
+            count += parseInt($(ele).val());
+        });
+        $(".amount-sum em").text(count);
+        $(".p-sum").each(function(i, ele) {
+            money += parseFloat($(ele).text().substr(1));
+        });
+        $(".price-sum em").text("￥" + money.toFixed(2));
+    }
+8.2创建元素
+语法：
+$("<li></li>");
+动态地创建了一个li标签，注意只是创建还没有添加
+8.3添加元素
+1.内部添加 ：把创建的内容放到element元素里面去
+element.append("内容")//把内容放入匹配元素内部的最后面，类似原生的appendChild
+element.prepend("内容")//把内容放入匹配元素内部的最前面
+1.外部添加 ：把创建的内容放到element元素前后去
+element.after("内容")//把内容放入匹配元素后面
+element.before("内容")//把内容放入匹配元素前面
+1.删除元素
+$("ul").remove(); 可以删除匹配的元素 自杀
+$("ul").empty();  可以删除匹配的元素里面的子节点 孩子
+$("ul").html("");  可以删除匹配的元素里面的子节点 孩子   $("ul").html();是返回元素内容
+
+<
+    <ul>
+        <li>原先的li</li>
+    </ul>
+    <div class="test">我是原先的div</div>
+    <script>
+        $(function() {
+            // 1. 创建元素
+            var li = $("<li>我是后来创建的li</li>");
+            // 2. 添加元素
+
+            // (1) 内部添加
+            // $("ul").append(li);  内部添加并且放到内容的最后面 
+            $("ul").prepend(li); // 内部添加并且放到内容的最前面
+
+            // (2) 外部添加
+            var div = $("<div>我是后妈生的</div>");
+            // $(".test").after(div);
+            $(".test").before(div);
+            // 3. 删除元素
+            // $("ul").remove(); 可以删除匹配的元素 自杀
+            // $("ul").empty(); // 可以删除匹配的元素里面的子节点 孩子
+            $("ul").html(""); // 可以删除匹配的元素里面的子节点 孩子
+
+        })
+    </script>
+购物车模块-清空购物车
+  // 6. 删除商品模块
+    // (1) 商品后面的删除按钮
+    $(".p-action a").click(function() {
+        // 删除的是当前的商品 
+        $(this).parents(".cart-item").remove();
+        getSum();
+    });
+    // (2) 删除选中的商品
+    $(".remove-batch").click(function() {
+        // 删除的是小的复选框选中的商品
+        $(".j-checkbox:checked").parents(".cart-item").remove();
+        getSum();
+    });
+    // (3) 清空购物车 删除全部商品
+    $(".clear-all").click(function() {
+        $(".cart-item").remove();
+        getSum();
+    })
+})
+
+9.jQuery尺寸、位置操作
+9.1jQuery尺寸
+
+（）内空着就是获取宽高，并且返回的是数字型
+（）加入数字(不用加单位)就是修改宽高
+ <s
+        div {
+            width: 200px;
+            height: 200px;
+            background-color: pink;
+            padding: 10px;
+            border: 15px solid red;
+            margin: 20px;
+        }
+    </style>
+    <script src="jquery.min.js"></script>
+</head>
+
+<body>
+    <div></div>
+    <script>
+        $(function() {
+            // 1. width() / height() 获取设置元素 width和height大小 
+            console.log($("div").width());
+            // $("div").width(300);
+
+            // 2. innerWidth() / innerHeight()  获取设置元素 width和height + padding 大小 
+            console.log($("div").innerWidth());
+
+            // 3. outerWidth()  / outerHeight()  获取设置元素 width和height + padding + border 大小 
+            console.log($("div").outerWidth());
+
+            // 4. outerWidth(true) / outerHeight(true) 获取设置 width和height + padding + border + margin
+            console.log($("div").outerWidth(true));
+
+
+        })
+    </script>
+9.2jQuery位置
+位置主要有三个：offset()、position()、scrollTop()/scrollLeft()
+1.offest（）获取或者获取元素偏移
+offset（）设置或返回被选元素相对于文档的偏移坐标，跟父级没有关系
+2.positon（）获取或者获取元素偏移
+ position（）返回被选元素带有定位的父级的偏移坐标，  如果没有带有定位的父级，则以文档为准 【只能获取不能设置】
+ <s
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .father {
+            width: 400px;
+            height: 400px;
+            background-color: pink;
+            margin: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .son {
+            width: 150px;
+            height: 150px;
+            background-color: purple;
+            position: absolute;
+            left: 10px;
+            top: 10px;
+        }
+    </style>
+    <script src="jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="father">
+        <div class="son"></div>
+    </div>
+    <script>
+        $(function() {
+            // 1. 获取设置距离文档的位置（偏移） offset
+            console.log($(".son").offset());//获得一个对象，对象里有left和top属性
+            console.log($(".son").offset().top);//获得对象的top值
+            //修改位置
+            // $(".son").offset({
+            //     top: 200,
+            //     left: 200
+            // });
+            // 2. 获取距离带有定位父级位置（偏移） position   如果没有带有定位的父级，则以文档为准
+            
+            console.log($(".son").position());//获得一个对象，对象里有left和top属性
+            // 这个方法只能获取不能设置偏移
+            // $(".son").position({
+            //     top: 200,
+            //     left: 200
+            // });
+        })
+    </script>
+3.scrollTop与scrollLeft设置或者获取元素被卷去的头部和左侧
+1.scrollTop（）设置或返回被选元素被卷去的头部
+1.scrollLeft（）设置或返回被选元素被卷去的左侧
+ 
+<bo
+    <div class="back">返回顶部</div>
+    <div class="container">
+    </div>
+    <script>
+        $(function() {
+            //设置被卷去的头部位置
+            $(document).scrollTop(100);
+            // 被卷去的头部 scrollTop()  / 被卷去的左侧 scrollLeft()            
+            var boxTop = $(".container").offset().top;
+            // 页面滚动事件
+            $(window).scroll(function() {
+                // console.log(11);
+                console.log($(document).scrollTop());
+                if ($(document).scrollTop() >= boxTop) {
+                    $(".back").fadeIn();
+                } else {
+                    $(".back").fadeOut();
+                }
+            });
+            // 返回顶部
+            $(".back").click(function() {
+                // $(document).scrollTop(0);
+                $("body, html").stop().animate({
+                    scrollTop: 0
+                });
+                // $(document).stop().animate({
+                //     scrollTop: 0
+                // }); 不能是文档而是 html和body元素做动画 ，因为annimate()只对元素做动画
+            })
+        })
+    </script>
