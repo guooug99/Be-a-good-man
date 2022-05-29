@@ -1,0 +1,1190 @@
+
+
+1、对象
+在 JavaScript 中，对象是一组无序的相关属性和方法的集合，所有的事物都是对象，例如字符串、数值、数组、函数等。
+对象是由属性和方法组成的：
+属性：事物的特征，在对象中用属性来表示（常用名词）
+方法：事物的行为，在对象中用方法来表示（常用动词）
+1.1、创建对象
+在 JavaScript 中，现阶段我们可以采用三种方式创建对象（object）：
+利用字面量创建对象
+利用 new Object创建对象
+利用构造函数创建对象
+①利用字面量创建对象
+对象字面量：就是花括号 { } 里面包含了表达这个具体事物（对象）的属性和方法
+{ } 里面采取键值对的形式表示
+键：相当于属性名
+值：相当于属性值，可以是任意类型的值（数字类型、字符串类型、布尔类型，函数类型等）
+var star = {
+    name : 'pink',
+    age : 18,
+    sex : '男',
+    sayHi : function(){
+        alert('大家好啊~');
+    }
+};
+// 多个属性或者方法中间用逗号隔开
+// 方法冒号后面跟的是一个匿名函数
+对象的调用
+ 对象里面的属性调用 : 对象.属性名 ，这个小点 . 就理解为“ 的 ” 
+ 对象里面属性的另一种调用方式 : 对象[‘属性名’]，注意方括号里面的属性必须加引号，我们后面会用 
+ 对象里面的方法调用：对象.方法名() ，注意这个方法名字后面一定加括号 
+console.log(star.name)     // 调用名字属性
+console.log(star['name'])  // 调用名字属性
+star.sayHi();              // 调用 sayHi 方法,注意，一定不要忘记带后面的括号
+变量、属性、函数、方法总结
+变量：单独声明赋值，单独存在
+属性：对象里面的变量称为属性，不需要声明，用来描述该对象的特征
+函数：单独存在的，通过==“函数名()”==的方式就可以调用
+方法：对象里面的函数称为方法，方法不需要声明，使用==“对象.方法名()”==的方式就可以调用，方法用来描述该对象的行为和功能。
+②利用 new Object 创建对象
+跟之前的 new Array() 原理一致：var 对象名 = new Object();
+使用的格式：对象.属性 = 值
+var obj = new Object(); //创建了一个空的对象
+obj.name = '张三丰';
+obj.age = 18;
+obj.sex = '男';
+obj.sayHi = function(x) {
+    console.log(x);
+}
+
+//1.我们是利用等号赋值的方法添加对象
+//2.每个属性和方法之间用分号结束
+console.log(obj.name);
+console.log(obj['sex']);
+obj.sayHi(1);
+③利用构造函数创建对象
+构造函数 ：是一种特殊的函数，主要用来初始化对象，即为对象成员变量赋初始值，它总与 new 运算符一起使用。我们可以把对象中一些公共的属性和方法抽取出来，然后封装到这个函数里面。
+在 js 中，使用构造函数要时要注意以下两点：
+构造函数用于创建某一类对象，其首字母要大写
+构造函数要和 new 一起使用才有意义
+//构造函数的语法格式
+function 构造函数名() {
+    this.属性 = 值;
+    this.方法 = function() {}
+}
+new 构造函数名();
+//1. 构造函数名字首字母要大写
+//2. 构造函数不需要return就可以返回结果
+//3. 调用构造函数必须使用 new
+//4. 我们只要new Star() 调用函数就创建了一个对象
+//5. 我们的属性和方法前面必须加this
+function Star(uname,age,sex) {
+    this.name = uname;
+    this.age = age;
+    this.sex = sex;
+    this.sing = function(sang){
+        console.log(sang);
+    }
+}
+var ldh = new Star('刘德华',18,'男');
+console.log(typeof ldh) // object对象，调用函数返回的是对象
+
+console.log(ldh.name);
+console.log(ldh['sex']);
+ldh.sing('冰雨');//调用函数
+//把冰雨传给了sang
+
+var zxy = new Star('张学友',19,'男');
+构造函数名字首字母要大写
+函数内的属性和方法前面需要添加 this ，表示当前对象的属性和方法。
+构造函数中不需要 return 返回结果。
+当我们创建对象的时候，必须用 new 来调用构造函数。
+
+构造函数和对象
+构造函数，如 Stars()，抽象了对象的公共部分，封装到了函数里面，它泛指某一大类（class）
+创建对象，如 new Stars()，特指某一个，通过 new 关键字创建对象的过程我们也称为对象实例化
+
+
+构造函数和对象
+构造函数，如 Stars()，抽象了对象的公共部分，封装到了函数里面，它泛指某一大类（class）
+创建对象，如 new Stars()，特指某一个，通过 new 关键字创建对象的过程我们也称为对象实例化
+
+
+new关键字
+new 在执行时会做四件事:
+在内存中创建一个新的空对象。
+让 this 指向这个新的对象。
+执行构造函数里面的代码，给这个新对象添加属性和方法
+返回这个新对象（所以构造函数里面不需要return）
+1.2、遍历对象的属性🔥
+for...in 语句用于对数组或者对象的属性进行循环操作
+语法如下
+for(变量 in 对象名字){
+    // 在此执行代码
+}
+语法中的变量是自定义的，它需要符合命名规范，通常我们会将这个变量写为 k 或者 key，可返回属性名或数组序列号。
+for(var k in obj) {
+    console.log(k);		//这里的 k 是属性名
+    console.log(obj[k]);//这里的 obj[k] 是属性值
+}
+
+var obj = {
+    name: '秦sir',
+    age: 18,
+    sex: '男',
+    fn:function() {};
+};
+console.log(obj.name);
+console.log(obj.age);
+console.log(obj.sex);
+
+//for in 遍历我们的对象
+//for (变量 in 对象){}
+//我们使用for in 里面的变量 我们喜欢写k 或者key
+for(var k in obj){
+    console.log(k); // k 变量 输出得到的是全部属性名
+    console.log(obj[k]); // obj[k] 得到的是全部属性值
+}
+
+
+2、内置对象
+JavaScript 中的对象分为3种：自定义对象 、内置对象、 浏览器对象
+内置对象就是指 JS 语言自带的一些对象，这些对象供开发者使用，并提供了一些常用的或是最基本而必要的功能
+JavaScript 提供了多个内置对象：Math、 Date 、Array、String等
+2.1、查文档
+学习一个内置对象的使用，只要学会其常用成员的使用即可，我们可以通过查文档学习，可以通过MDN/W3C来查询
+MDN: https://developer.mozilla.org/zh-CN/
+2.1.1、如何学习对象中的方法
+查阅该方法的功能
+查看里面参数的意义和类型
+查看返回值的意义和类型
+通过 demo 进行测试
+3、Math对象
+Math 对象不是构造函数，它具有数学常数和函数的属性和方法。跟数学相关的运算（求绝对值，取整、最大值等）可以使用 Math 中的成员。
+// Math数学对象，不是一个构造函数，所以我们不需要new 来调用，而是直接使用里面的属性和方法即可
+
+Math.PI		 			// 圆周率
+Math.floor() 	 		// 向下取整
+Math.ceil()             // 向上取整
+Math.round()            // 四舍五入版 就近取整   注意 -3.5、-3.3   结果是  -3   -3.6结果是-4 3.5结果是4
+Math.abs()		 		// 绝对值
+Math.max()/Math.min()	// 求最大和最小值 
+注意：上面的方法必须带括号
+console.log(Math.PI);  
+console.log(Math.max(1,99,3)); // 99
+练习：封装自己的数学对象
+利用对象封装自己的数学对象，里面有PI 最大值 和最小值
+var myMath = {
+    PI: 3.141592653,
+    max: function() {
+        var max = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            if (arguments[i] > max) {
+                max = arguments[i];
+            }
+        }
+        return max;
+    },
+    min: function() {
+        var min = arguments[0];
+        for (var i = 1; i < arguments.length; i++) {
+            if (arguments[i] < min) {
+                min = arguments[i];
+            }
+        }
+        return min;
+    }
+}
+console.log(myMath.PI);
+console.log(myMath.max(1, 5, 9));
+console.log(myMath.min(1, 5, 9));
+
+3.Math绝对值和三个取整方法
+Math.abs() 取绝对值
+三个取整方法： 
+  
+Math.floor() : 向下取整
+Math.ceil() : 向上取整
+Math.round() : 四舍五入，其他数字都是四舍五入，但是5特殊，它往大了取 
+//1.绝对值方法
+console.log(Math.abs(1));  // 1
+console.log(Math.abs(-1)); // 1
+console.log(Math.abs('-1')); // 1 隐式转换，会把字符串 -1 转换为数字型
+//2.三个取整方法
+console.log(Math.floor(1.1)); // 1 向下取整，向最小的取值 floor-地板
+console.log(Math.floor(1.9)); //1
+
+console.log(Math.ceil(1.1)); //2 向上取整，向最大的取值 ceil-天花板
+console.log(Math.ceil(1.9)); //2 
+
+//四舍五入 其他数字都是四舍五入，但是5特殊，它往大了取(无论正负值)
+
+console.log(Math.round(1.1)); //1 四舍五入
+console.log(Math.round(1.5)); //2
+console.log(Math.round(1.9)); //2
+console.log(Math.round(-1.1)); // -1
+console.log(Math.round(-1.5)); // -1
+
+4.随机数方法random()
+这个方法里不跟参数
+random() 方法可以随机返回一个小数，其取值范围是 [0，1)，左闭右开 0 <= x < 1
+function getRandom() {
+  return Math.random();
+}
+得到一个两数之间的随机数，包括第一个数，不包括第二个数
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+得到一个两数之间的随机整数，包括第一个数，不包括第二个数
+// 得到两个数之间的随机整数，并且包含这两个整数
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //不含最大值，含最小值
+}
+得到一个两数之间的随机整数，包括第一个数，包括第二个数
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min; //含最大值，含最小值 
+}
+https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Math/random
+1.随机点名
+var arr = ['张三', '李四','王五','秦六']；
+console.log(arr[getRandomIntInclusive(0,arr.length - 1)]);
+2.猜数字游戏
+
+
+
+//function getRandom(min,max) {
+  //  return Math.floor(Math.random() * (max - min + 1)) + min;
+//}
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min; //含最大值，含最小值 
+}
+var random = getRandomIntInclusive(1,10);
+while(true) { //死循环 ，需要退出循环条件
+     var num = prompt('请输入1~10之间的一个整数:');
+     if(num > random) {
+         alert('你猜大了');
+     }else if (num < random) {
+         alert('你猜小了');
+     }else {
+         alert('你猜中了');
+         break; //退出整个循环
+     }
+}
+
+4、Data()日期对象🔥
+ Date 对象和 Math 对象不一样，他是一个构造函数(math不是)，所以我们需要实例化后才能使用 
+ Date 实例用来处理日期和时间 
+4.1、Date()方法的使用🔥
+语法
+new Date();
+new Date(value);
+new Date(dateString);
+new Date(year, monthIndex [, day [, hours [, minutes [, seconds [, milliseconds]]]]]);
+备注：
+创建一个新Date对象的唯一方法是通过new 操作符，例如：
+let now = new Date();
+若将它作为常规函数调用（即不加 new 操作符），将返回一个字符串，而非 Date 对象。 
+参数
+Date()构造函数有四种基本形式
+没有参数
+如果没有提供参数，那么新创建的Date对象表示实例化时刻的日期和时间。
+Unix时间戳
+value
+一个 Unix 时间戳（Unix Time Stamp），它是一个整数值，表示自1970年1月1日00:00:00 UTC（the Unix epoch）以来的毫秒数，忽略了闰秒。请注意大多数 Unix 时间戳功能仅精确到最接近的秒。
+时间戳字符串 dateString
+表示日期的字符串值。该字符串应该能被 Date.parse() 正确方法识别（即符合 IETF-compliant RFC 2822 timestamps 或 version of ISO8601）。
+2019/5/1 8:8:8   2019-5-1 8:8:8
+YYYY-MM-DDTHH:mm:ss.sssZ
+4.1.1、获取当前时间必须实例化
+var now = new Date();
+console.log(now);
+//输出：Wed May 25 2022 17:33:31 GMT+0800 (中国标准时间)
+4.1.2、Date()构造函数的参数🔥
+如果括号里面有时间，就返回参数里面的时间。例如日期格式字符串为 ‘2019-5-1’，可以写成new Date('2019-5-1') 或者 new Date('2019/5/1')
+如果Date()不写参数，就返回当前时间
+如果Date()里面写参数，就返回括号里面输入的时间
+// 1.如果没有参数，返回当前系统的当前时间
+var now = new Date();
+console.log(now);
+// 2.参数常用的写法 数字型 2019,10,1  字符串型 '2019-10-1 8:8:8' 时分秒
+// 如果Date()里面写参数，就返回括号里面输入的时间
+var data = new Date(2019,10,1);
+console.log(data);  // 返回的是11月不是10月
+var data2 = new Date('2019-10-1 8:8:8');
+console.log(data2);
+4.2、日期格式化🔥
+我们想要 2019-8-8 8:8:8 格式的日期，要怎么办？
+需要获取日期指定的部分，所以我们要手动的得到这种格式
+
+var date = new Date();
+console.log(date.getFullYear()); // 返回当前日期的年 2019
+console.log(date.getMonth() + 1);  //返回的月份小一个月 记得月份 +1
+console.log(date.getDate); //返回的是几号
+console.log(date.getDay());  //周一返回1 周6返回六 周日返回0
+
+
+
+// 写一个 2019年 5月 1日 星期三
+var date = new Date(); 
+var year =  date.getFullYear();
+var month = date.getMonth() + 1;
+var dates = date.getDate();
+console.log('今天是' + year +'年' + month + '月' + dates +'日' );
+
+// 封装一个函数返回当前的时分秒 格式 08:08:08
+function getTimer() {
+    var time = new Date();
+    var h = time.getHours();
+    h = h < 10 ? '0' + h : h;
+    var m = time.getMinutes();
+    m = m < 10 ? '0' + m : m;
+    var s = time.getSeconds();
+    s = s < 10 ? '0' + s : s;
+    return h + ':' + m + ':' + s;
+}
+console.log(getTimer());
+
+4.3、获取日期的总的毫秒形式
+date.valueOf() ：得到现在时间距离1970.1.1总的毫秒数
+date.getTime() ：得到现在时间距离1970.1.1总的毫秒数
+都没有参数
+但var date1 = +new Date();可以输入参数
+例：var inputTime = +new Date(time); // 有参数，返回的是用户输入时间的总毫秒数
+// 获取Date总的毫秒数 不是当前时间的毫秒数 而是距离1970年1月1号过了多少毫秒数
+
+// 实例化Date对象
+var date = new Date();
+
+// 1 .通过 valueOf()  getTime() 用于获取对象的原始值
+console.log(date.valueOf());  //得到现在时间距离1970.1.1总的毫秒数
+console.log(date.getTime());
+
+// 2.简单的写法
+var date1 = +new Date();  // +new Date()返回的就是总的毫秒数，
+console.log(date1);
+
+// 3. HTML5中提供的方法 获得总的毫秒数 有兼容性问题
+console.log(Date.now());
+
+倒计时效果
+
+
+
+function countDown(time) {
+    var nowTime = +new Date(); //没有参数，返回的是当前时间总的毫秒数
+    var inputTime = +new Date(time); // 有参数，返回的是用户输入时间的总毫秒数
+    var times = (inputTime - nowTime) / 1000; //times就是剩余时间的总的秒数
+
+    var d = parseInt(times / 60 / 60 / 24); //天数
+    d < 10 ? '0' + d : d;
+    var h = parseInt(times / 60 / 60 % 24); //小时
+    h < 10 ? '0' + h : h;
+    var m = parseInt(times / 60 % 60); //分
+    m < 10 ? '0' + m : m;
+    var s = parseInt(times % 60); //秒
+    s < 10 ? '0' + s : s;
+    return d + '天' + h + '时' + m + '分' + s + '秒';
+}
+console.log(countDown('2020-11-09 18:29:00'));
+var date = new Date;
+console.log(date); //现在时间
+
+5、数组对象
+在JS（一）下面
+6、字符串对象
+6.1、基本包装类型
+为了方便操作基本数据类型，JavaScript 还提供了三个特殊的引用类型：String、Number和 Boolean。
+基本包装类型就是把简单数据类型包装成为复杂数据类型，这样基本数据类型就有了属性和方法。
+我们看看下面代码有什么问题吗？
+var str = 'andy';
+console.log(str.length);
+按道理基本数据类型是没有属性和方法的，而对象才有属性和方法，但上面代码却可以执行，这是因为 js 会把基本数据类型包装为复杂数据类型，其执行过程如下 ：
+// 1.生成临时变量,把简单类型包装为复杂数据类型
+var temp = new String('andy');
+// 2.赋值给我们声明的字符变量
+str = temp;
+// 3.销毁临时变量
+temp = null;
+
+6.2、字符串的不可变
+指的是里面的值不可变，虽然看上去可以改变内容，但其实是地址变了，内存中新开辟了一个内存空间。
+var str = 'abc';
+str = 'hello';
+// 当重新给 str 赋值的时候，常量'abc'不会被修改，依然在内存中
+// 重新给字符串赋值，会重新在内存中开辟空间，这个特点就是字符串的不可变
+// 由于字符串的不可变，在大量拼接字符串的时候会有效率问题
+var str = '';
+for(var i = 0; i < 10000;  i++){
+    str += i;
+}
+console.log(str);
+// 这个结果需要花费大量时间来显示，因为需要不断的开辟新的空间
+6.3、根据字符返回位置
+字符串所有的方法，都不会修改字符串本身(字符串是不可变的)，操作完成会返回一个新的字符串
+（同数组的那两个方法一致）
+方法名说明indexOf(‘要查找的字符’，[开始的位置])返回指定内容在元字符串中的位置，如果找不到就返回-1，开始的位置是index索引号lastIndexOf(‘要查找的字符’，[开始的位置[从右向左找]])从后往前找，只找第一个匹配的，如果找不到就返回-1，
+ // 字符串对象  根据字符返回位置  str.indexOf('要查找的字符', [起始的位置])
+        var str = '改革春风吹满地，春天来了';
+        console.log(str.indexOf('春')); //默认从0开始查找 ，结果为2
+        console.log(str.indexOf('春', 3)); // 从索引号是 3的位置开始往后查找，结果是8
+
+6.3.1、返回字符位置
+查找字符串 “abcoefoxyozzopp” 中所有o出现的位置以及次数
+核心算法：先查找第一个o出现的位置
+然后 只要 indexOf返回的结果不是 -1 就继续往后查找
+因为 indexOf 只能查找到第一个，所以后面的查找，一定是当前索引加1，从而继续查找
+var str = "oabcoefoxyozzopp";
+var index = str.indexOf('o');
+var num = 0;
+// console.log(index);
+while (index !== -1) {
+    console.log(index);
+    num++;
+    index = str.indexOf('o', index + 1);
+}
+console.log('o出现的次数是: ' + num);
+
+6.4、根据位置返回字符
+
+
+返回字符位置
+判断一个字符串 “abcoefoxyozzopp” 中出现次数最多的字符，并统计其次数
+核心算法：利用 charAt() 遍历这个字符串
+把每个字符都存储给对象， 如果对象没有该属性，就为1，如果存在了就 +1
+遍历对象，得到最大值和该字符
+<scr
+    // 有一个对象 来判断是否有该属性 对象['属性名']
+    var o = {
+        age: 18
+    }
+    if (o['sex']) {
+        console.log('里面有该属性');
+
+    } else {
+        console.log('没有该属性');
+
+    }
+
+    //  判断一个字符串 'abcoefoxyozzopp' 中出现次数最多的字符，并统计其次数。
+    // o.a = 1
+    // o.b = 1
+    // o.c = 1
+    // o.o = 4
+    // 核心算法：利用 charAt() 遍历这个字符串
+    // 把每个字符都存储给对象， 如果对象没有该属性，就为1，如果存在了就 +1
+    // 遍历对象，得到最大值和该字符
+    var str = 'abcoefoxyozzopp';
+    var o = {};
+    for (var i = 0; i < str.length; i++) {
+        var chars = str.charAt(i); // chars 是 字符串的每一个字符
+        if (o[chars]) { // o[chars] 得到的是属性值
+            o[chars]++;
+        } else {
+            o[chars] = 1;
+        }
+    }
+    console.log(o);
+    // 2. 遍历对象
+    var max = 0;
+    var ch = '';
+    for (var k in o) {
+        // k 得到是 属性名
+        // o[k] 得到的是属性值
+        if (o[k] > max) {
+            max = o[k];
+            ch = k;
+        }
+    }
+    console.log(max);
+    console.log('最多的字符是' + ch);
+</script>
+
+6.5、字符串操作方法
+
+<script>
+    // 1. concat('字符串1','字符串2'....)
+    var str = 'andy';
+    console.log(str.concat('red'));
+
+    // 2. substr('截取的起始位置', '截取几个字符');
+    var str1 = '改革春风吹满地';
+    console.log(str1.substr(2, 2)); // 春风 第一个2 是索引号的2   第二个2 是取几个字符
+</script>
+
+6.6、replace()方法🔥
+replace() 方法用于在字符串中用一些字符替换另一些字符
+其使用格式：replace(被替换的字符,要替换为的字符串)
+<script>
+    // 1. 替换字符 replace('被替换的字符', '替换为的字符')  它只会替换第一个字符
+    var str = 'andyandy';
+    console.log(str.replace('a', 'b'));
+    // 有一个字符串 'abcoefoxyozzopp'  要求把里面所有的 o 替换为 *
+    var str1 = 'abcoefoxyozzopp';
+    while (str1.indexOf('o') !== -1) {
+        str1 = str1.replace('o', '*');
+    }
+    console.log(str1);
+</script>
+
+语法：
+str.replace(regexp|substr, newSubStr|function)
+regexp (pattern)
+一个RegExp 对象或者其字面量。该正则所匹配的内容会被第二个参数的返回值替换掉。
+substr (pattern)
+一个将被 newSubStr 替换的 字符串。其被视为一整个字符串，而不是一个正则表达式。仅第一个匹配项会被替换。
+newSubStr (replacement)
+用于替换掉第一个参数在原字符串中的匹配部分的字符串。该字符串中可以内插一些特殊的变量名。参考下面的使用字符串作为参数。
+function (replacement)
+一个用来创建新子字符串的函数，该函数的返回值将替换掉第一个参数匹配到的结果。参考下面的指定一个函数作为参数。
+6.7、split()方法🔥
+split() 方法用于切分字符串，它可以将字符串切分为数组。在切分完毕之后，返回的是一个新数组。
+str.split([separator[, limit]])
+separator
+指定表示每个拆分应发生的点的字符串。
+limit
+一个整数，限定返回的分割片段数量。
+var myString = "Hello World. How are you doing?";
+var splits = myString.split(" ", 3);
+
+console.log(splits);
+
+
+例如下面代码：
+var str = 'a,b,c,d';
+console.log(str.split(','));
+// 返回的是一个数组 ['a', 'b', 'c', 'd']
+   
+<script>
+// 2. 字符转换为数组 split('分隔符')    前面我们学过 join 把数组转换为字符串
+    var str2 = 'red, pink, blue';
+    console.log(str2.split(','));
+    var str3 = 'red&pink&blue';
+    console.log(str3.split('&'));
+    
+    
+    const str = 'The quick brown fox jumps over the lazy dog.';
+    const words = str.split(' ');
+    console.log(words[3]);
+    // expected output: "fox"
+
+    const chars = str.split('');
+    console.log(chars[8]);
+    // expected output: "k"
+
+    const strCopy = str.split();
+    console.log(strCopy);
+    // expected output: Array ["The quick brown fox jumps over the lazy dog."]
+
+</script>
+
+
+6.8、大小写转换
+toUpperCase() 转换大写
+toLowerCase() 转换小写
+7、简单类型于复杂类型
+简单类型又叫做基本数据类型或者值类型，复杂类型又叫做引用类型。
+值类型：简单数据类型/基本数据类型，在存储时变量中存储的是值本身，因此叫做值类型
+    string ，number，boolean，undefined，null
+引用类型：复杂数据类型，在存储时变量中存储的仅仅是地址（引用），因此叫做引用数据类型
+    通过 new 关键字创建的对象（系统对象、自定义对象），如 Object、Array、Date等
+
+7.1、堆和栈🔥
+堆栈空间分配区别：
+栈（操作系统）：由操作系统自动分配释放存放函数的参数值、局部变量的值等。其操作方式类似于数据结构中的栈；
+简单数据类型存放到栈里面
+堆（操作系统）：存储复杂类型(对象)，一般由程序员分配释放，若程序员不释放，由垃圾回收机制回收。
+复杂数据类型存放到堆里面
+
+注意：JavaScript中没有堆栈的概念，通过堆栈的方式，可以让大家更容易理解代码的一些执行方式，便于将来学习其他语言。
+7.2、简单类型的内存分配🔥
+值类型（简单数据类型）： string ，number，boolean，undefined，null
+值类型变量的数据直接存放在变量（栈空间）中
+
+
+引用类型（复杂数据类型）：通过 new 关键字创建的对象（系统对象、自定义对象），如 Object、Array、Date等
+引用类型变量（栈空间）里存放的是地址，真正的对象实例存放在堆空间中
+
+
+
+<script>
+    // 简单数据类型 null  返回的是一个空的对象  object 
+    var timer = null;
+    console.log(typeof timer);
+    // 如果有个变量我们以后打算存储为对象，暂时没想好放啥， 这个时候就给 null 
+    // 1. 简单数据类型 是存放在栈里面 里面直接开辟一个空间存放的是值
+    // 2. 复杂数据类型 首先在栈里面存放地址 十六进制表示  然后这个地址指向堆里面的数据
+</script>
+
+7.3、简单类型传参🔥
+函数的形参也可以看做是一个变量，当我们把一个值类型变量作为参数传给函数的形参时，其实是把变量在栈空间里的值复制了一份给形参，那么在方法内部对形参做任何修改，都不会影响到的外部变量。
+<script>
+    // 简单数据类型传参
+    function fn(a) {
+        a++;
+        console.log(a);
+    }
+    var x = 10;
+    fn(x);
+    console.log(x);
+</script>
+7.4、复杂类型传参🔥
+函数的形参也可以看做是一个变量，当我们把引用类型变量传给形参时，其实是把变量在栈空间里保存的堆地址复制给了形参，形参和实参其实保存的是同一个堆地址，所以操作的是同一个对象。
+<script>
+    // 复杂数据类型传参
+    function Person(name) {
+        this.name = name;
+    }
+
+    function f1(x) { // x = p
+        console.log(x.name); // 2. 这个输出什么 ?  刘德华   
+        x.name = "张学友";
+        console.log(x.name); // 3. 这个输出什么 ?   张学友
+    }
+    var p = new Person("刘德华");
+    console.log(p.name); // 1. 这个输出什么 ?   刘德华 
+    f1(p);
+    console.log(p.name); // 4. 这个输出什么 ?   张学友
+</script>
+目录总览
+
+1、DOM简介
+1.1、什么是DOM
+文档对象模型（Document Object Model，简称 DOM），是 W3C 组织推荐的处理可扩展标记语言（HTML或者XML）的标准编程接口
+W3C 已经定义了一系列的 DOM 接口，通过这些 DOM 接口可以改变网页的内容、结构和样式。
+
+
+文档：一个页面就是一个文档，DOM中使用doucument来表示
+元素：页面中的所有标签都是元素，DOM中使用 element 表示
+节点：网页中的所有内容都是节点（标签，属性，文本，注释等），DOM中使用node表示
+DOM 把以上内容都看做是对象
+2、获取元素
+2.1、如何获取页面元素
+DOM在我们实际开发中主要用来操作元素。
+我们如何来获取页面中的元素呢?
+获取页面中的元素可以使用以下几种方式:
+根据 ID 获取
+根据标签名获取
+通过 HTML5 新增的方法获取
+特殊元素获取
+2.2、根据ID获取
+使用 getElementByld() 方法可以获取带ID的元素对象
+doucument.getElementByld('id名')
+使用 console.dir() 可以打印我们获取的元素对象，更好的查看对象里面的属性和方法。
+示例
+<div id="time">2019-9-9</div>
+<script>
+    // 1.因为我们文档页面从上往下加载，所以得先有标签，所以script写在标签下面
+    // 2.get 获得 element 元素 by 通过驼峰命名法
+    // 3.参数 id是大小写敏感的字符串
+    // 4.返回的是一个元素对象
+    var timer = document.getElementById('time');
+    console.log(timer);
+    // 5. console.dir 打印我们的元素对象，更好的查看里面的属性和方法
+    console.dir(timer);
+</script>
+
+2.3、根据标签名获取
+根据标签名获取，使用 getElementByTagName() 方法可以返回带有指定标签名的对象的集合
+doucument.getElementsByTagName('标签名');
+因为得到的是一个对象的集合，所以我们想要操作里面的元素就需要遍历
+得到元素对象是动态的
+返回的是获取过来元素对象的集合，以伪数组的形式存储
+如果获取不到元素，则返回为空的伪数组(因为获取不到对象)
+<ul>
+    <li>知否知否，应是等你好久</li>
+    <li>知否知否，应是等你好久</li>
+    <li>知否知否，应是等你好久</li>
+    <li>知否知否，应是等你好久</li>
+    <li>知否知否，应是等你好久</li>
+</ul>
+<script>
+    // 1.返回的是获取过来元素对象的集合 以伪数组的形式存储
+    var lis = document.getElementsByTagName('li');
+    console.log(lis);
+    console.log(lis[0]);
+    // 2.依次打印,遍历
+    for (var i = 0; i < lis.length; i++) {
+        console.log(lis[i]);
+    }
+    // 3.如果页面中只有 1 个 li，返回的还是伪数组的形式
+    // 4.如果页面中没有这个元素，返回的是空伪数组
+</script>
+
+
+2.4、根据标签名获取
+还可以根据标签名获取某个元素（父元素）内部所有指定标签名的子元素,获取的时候不包括父元素自己
+element.getElementsByTagName('标签名')//element父元素
+
+ol.getElementsByTagName('li');
+注意：父元素必须是单个对象(必须指明是哪一个元素对象)，获取的时候不包括父元素自己
+<script>
+	//element.getElementsByTagName('标签名'); 父元素必须是指定的单个元素
+    var ol = document.getElementById('ol');
+    console.log(ol.getElementsByTagName('li'));
+</script>
+2.5、通过H5新增方法获取
+①getElementsByClassName
+根据类名返回元素对象集合
+document.getElementsByClassName('类名') 注意：'   '内只写类名，不加.
+document.getElementsByClassName('类名'); 
+②document.querySelector
+根据指定选择器返回第一个元素对象
+document.querySelector('选择器');
+
+// 切记里面的选择器需要加符号 
+// 类选择器.box 
+// id选择器 #nav
+var firstBox = document.querySelector('.box');
+var li = document.querySelector('li');
+③document.querySelectorAll
+根据指定选择器返回所有元素对象
+document.querySelectorAll('选择器');
+注意：
+querySelector 和 querySelectorAll 里面的选择器需要加符号,比如: document.querySelector('#nav');
+④例子
+<
+<script>
+    // 1. getElementsByClassName 根据类名获得某些元素集合
+    var boxs = document.getElementsByClassName('box');
+    console.log(boxs);
+    // 2. querySelector 返回指定选择器的第一个元素对象  切记 里面的选择器需要加符号 .box  #nav
+    var firstBox = document.querySelector('.box');
+    console.log(firstBox);
+    var nav = document.querySelector('#nav');
+    console.log(nav);
+    var li = document.querySelector('li');
+    console.log(li);
+    // 3. querySelectorAll()返回指定选择器的所有元素对象集合
+    var allBox = document.querySelectorAll('.box');
+    console.log(allBox);
+    var lis = document.querySelectorAll('li');
+    console.log(lis);
+</script>
+2.6、获取特殊元素
+①获取body元素
+返回body元素对象
+document.body;
+
+<body>
+    <ul>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+    </ul>
+    <script>
+        console.log(document.body);
+    </script>
+</body>
+
+②获取html元素
+返回html元素对象
+document.documentElement;
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <ul>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+        <li>知否知否，应是等你好久</li>
+    </ul>
+    <script>
+        console.log(document.documentElement);
+    </script>
+</body>
+
+</html>
+
+
+3、事件基础
+3.1、事件概述
+JavaScript 使我们有能力创建动态页面，而事件是可以被 JavaScript 侦测到的行为。
+简单理解： 触发 — 响应机制。
+网页中的每个元素都可以产生某些可以触发 JavaScript 的事件，例如，我们可以在用户点击某按钮时产生一个事件，然后去执行某些操作。
+3.2、事件三要素
+事件源(谁)
+事件类型(什么事件)
+事件处理程序(做啥)
+<
+<script>
+    // 点击一个按钮，弹出对话框
+    // 1. 事件是有三部分组成  事件源  事件类型  事件处理程序   我们也称为事件三要素
+    //(1) 事件源 事件被触发的对象   谁  按钮
+    var btn = document.getElementById('btn');
+    //(2) 事件类型  如何触发 什么事件 比如鼠标点击(onclick) 还是鼠标经过 还是键盘按下
+    //(3) 事件处理程序  通过一个函数赋值的方式 完成
+    btn.onclick = function() {
+        alert('点秋香');
+    }
+</script>
+
+3.3、执行事件的步骤
+获取事件源
+注册事件(绑定事件)
+添加事件处理程序(采取函数赋值形式)
+<
+<script>
+    // 执行事件步骤
+    // 点击div 控制台输出 我被选中了
+    // 1. 获取事件源
+    var div = document.querySelector('div');
+    // 2.绑定事件 注册事件
+    // div.onclick 
+    // 3.添加事件处理程序 
+    div.onclick = function() {
+        console.log('我被选中了');
+    }
+</script>
+
+3.4、鼠标事件
+鼠标事件触发条件onclick鼠标点击左键触发onmouseover鼠标经过触发onmouseout鼠标离开触发onfocus获得鼠标焦点触发onblur失去鼠标焦点触发onmousemove鼠标移动触发onmouseup鼠标弹起触发onmousedown鼠标按下触发
+4、操作元素
+JavaScript 的 DOM 操作可以改变网页内容、结构和样式，我们可以利用 DOM 操作元素来改变元素里面的内容 、属性等。注意以下都是属性
+记得要先获取了元素才能操作！
+4.1、改变元素内容
+从起始位置到终止位置的内容，但它去除html标签，同时空格和换行也会去掉。
+element.innerText
+起始位置到终止位置的全部内容，包括HTML标签，同时保留空格和换行
+element.innerHTML
+<
+<body>
+    <div></div>
+    <p>
+        我是文字
+        <span>123</span>
+    </p>
+
+    <script>
+        // innerText 和 innerHTML的区别 
+        // 1. innerText 不识别html标签,去除空格和换行
+        var div = document.querySelector('div');
+        div.innerText = '<strong>今天是：</strong> 2019';
+        // 2. innerHTML 识别html标签 保留空格和换行的
+        div.innerHTML = '<strong>今天是：</strong> 2019';
+        // 这两个属性是可读写的  可以获取元素里面的内容
+        var p = document.querySelector('p');
+        console.log(p.innerText);
+        console.log(p.innerHTML);
+    </script>
+</body>
+
+
+
+4.2、改变元素属性
+//元素.属性
+// img.属性
+img.src = "xxx";
+
+input.value = "xxx";
+input.type = "xxx";
+input.checked = "xxx";
+input.selected = true / false;
+input.disabled = true / false;
+
+4.3、改变样式属性
+我们可以通过 JS 修改元素的大小、颜色、位置等样式。
+行内样式操作
+// element.style
+div.style.backgroundColor = 'pink';
+div.style.width = '250px';
+类名样式操作
+// element.className
+注意：
+JS里面的样式采取驼峰命名法，比如 fontSize ，backgroundColor
+JS 修改 style 样式操作 ，产生的是行内样式，CSS权重比较高
+如果样式修改较多，可以采取操作类名方式更改元素样式
+class 因为是个保留字，因此使用className来操作元素类名属性
+className 会直接更改元素的类名，会覆盖原先的类名
+<
+<body>
+    <div class="first">文本</div>
+    <script>
+        // 1. 使用 element.style 获得修改元素样式  如果样式比较少 或者 功能简单的情况下使用
+        var test = document.querySelector('div');
+        test.onclick = function() {
+            // this.style.backgroundColor = 'purple';
+            // this.style.color = '#fff';
+            // this.style.fontSize = '25px';
+            // this.style.marginTop = '100px';
+            // 让我们当前元素的类名改为了 change
+
+            // 2. 我们可以通过 修改元素的className更改元素的样式 适合于样式较多或者功能复杂的情况
+            // 3. 如果想要保留原先的类名，我们可以这么做 多类名选择器
+            // this.className = 'change';
+            this.className = 'first change';
+        }
+    </script>
+</body>
+
+4.4、总结
+
+4.5、排他思想
+如果有同一组元素，我们相要某一个元素实现某种样式，需要用到循环的排他思想算法：
+所有元素全部清除样式（干掉其他人）
+给当前元素设置样式 （留下我自己）
+注意顺序不能颠倒，首先干掉其他人，再设置自己
+<body>
+    <button>按钮1</button>
+    <button>按钮2</button>
+    <button>按钮3</button>
+    <button>按钮4</button>
+    <button>按钮5</button>
+    <script>
+        // 1. 获取所有按钮元素
+        var btns = document.getElementsByTagName('button');
+        // btns得到的是伪数组  里面的每一个元素 btns[i]
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].onclick = function() {
+                // (1) 我们先把所有的按钮背景颜色去掉  干掉所有人
+                for (var i = 0; i < btns.length; i++) {
+                    btns[i].style.backgroundColor = '';
+                }
+                // (2) 然后才让当前的元素背景颜色为pink 留下我自己
+                this.style.backgroundColor = 'pink';
+
+            }
+        }
+        //2. 首先先排除其他人，然后才设置自己的样式 这种排除其他人的思想我们成为排他思想
+    </script>
+</body>
+
+
+
+4.6、自定义属性
+4.6.1、获取属性值
+获取内置属性值(元素本身自带的属性)
+element.属性;
+获取自定义的属性，内置属性值也可以
+element.getAttribute('属性');
+4.6.2、设置属性值
+设置内置属性值
+element.属性 = '值';
+主要设置自定义的属性,内置属性值也可以
+element.setAttribute('属性','值');
+4.6.3、移除属性
+element.removeAttribute('属性');
+
+<body>
+    <div id="demo" index="1" class="nav"></div>
+    <script>
+        var div = document.querySelector('div');
+        // 1. 获取元素的属性值
+        // (1) element.属性 (内置属性值(元素本身自带的属性)id、class)
+        console.log(div.id);
+        //(2) element.getAttribute('属性')  get得到获取 attribute 属性的意思 我们程序员自己添加的属性我们称为自定义属性index
+        console.log(div.getAttribute('id'));
+        console.log(div.getAttribute('index'));
+        // 2. 设置元素属性值
+        // (1) element.属性= '值'
+        div.id = 'test';
+        div.className = 'navs';
+        // (2) element.setAttribute('属性', '值');  主要针对于自定义属性
+        div.setAttribute('index', 2);
+        div.setAttribute('class', 'footer'); // class 特殊  这里面写的就是class 不是className
+        // 3 移除属性 removeAttribute(属性)    
+        div.removeAttribute('index');
+    </script>
+</body>
+
+4.7、H5自定义属性
+自定义属性目的：
+保存并使用数据，有些数据可以保存到页面中而不用保存到数据库中
+有些自定义属性很容易引起歧义，不容易判断到底是内置属性还是自定义的，所以H5有了规定
+4.7.1 设置H5自定义属性
+H5规定自定义属性 data-开头作为属性名并赋值
+<div data-index = "1"></>
+// 或者使用JavaScript设置
+div.setAttribute('data-index',1);
+4.7.2 获取H5自定义属性
+兼容性获取 element.get/setAttribute('data-index')
+H5新增的：element.dataset.index 或element.dataset['index'] IE11才开始支持,同内置属性的获取和设置的规则很相似
+<body>
+    <div getTime="20" data-index="2" data-list-name="andy"></div>
+    <script>
+        var div = document.querySelector('div');
+        console.log(div.getAttribute('getTime'));
+        div.setAttribute('data-time', 20);
+        console.log(div.getAttribute('data-index'));
+        console.log(div.getAttribute('data-list-name'));
+        // h5新增的获取自定义属性的方法 它只能获取data-开头的
+        // dataset 是一个集合(对象？)里面存放了所有以data开头的自定义属性
+        console.log(div.dataset);
+        console.log(div.dataset.index);
+        console.log(div.dataset['index']);
+        // 如果自定义属性里面有多个-链接的单词，我们获取的时候采取 驼峰命名法
+        console.log(div.dataset.listName);
+        console.log(div.dataset['listName']);
+    </script>
+</body>
+
+
+5、节点操作
+获取元素通常使用两种方式：
+
+这两种方式都可以获取元素节点，我们后面都会使用，但是节点操作更简单
+一般的，节点至少拥有三个基本属性
+5.1、节点概述
+网页中的所有内容都是节点（标签、属性、文本、注释等），在DOM 中，节点使用 node 来表示。
+HTML DOM 树中的所有节点均可通过 JavaScript 进行访问，所有 HTML 元素（节点）均可被修改，也可以创建或删除。
+
+
+一般的，节点至少拥有nodeType（节点类型）、nodeName（节点名称）和nodeValue（节点值）这三个基本属性。
+元素节点：nodeType 为1
+属性节点：nodeType 为2
+文本节点：nodeType 为3(文本节点包括文字、空格、换行等)
+我们在实际开发中，节点操作主要操作的是元素节点
+利用 DOM 树可以把节点划分为不同的层级关系，常见的是父子兄层级关系。
+5.2、父级节点
+node.parentNode
+parentNode属性可以返回某节点的父结点，注意是最近的一个父结点
+如果指定的节点没有父结点则返回null
+<body>
+    <!-- 节点的优点 -->
+    <div>我是div</div>
+    <span>我是span</span>
+    <ul>
+        <li>我是li</li>
+        <li>我是li</li>
+        <li>我是li</li>
+        <li>我是li</li>
+    </ul>
+    <div class="demo">
+        <div class="box">
+            <span class="erweima">×</span>
+        </div>
+    </div>
+
+    <script>
+        // 1. 父节点 parentNode
+        var erweima = document.querySelector('.erweima');
+        // var box = document.querySelector('.box');
+        // 得到的是离元素最近的父级节点(亲爸爸) 如果找不到父节点就返回为 null
+        console.log(erweima.parentNode);
+    </script>
+</body>
+
+
+
+5.3、子结点
+parentNode.childNodes(标准)
+parentNode.childNodes 返回包含指定节点的子节点的集合，该集合为即时更新的集合
+返回值包含了所有的子结点，包括元素节点，文本节点等
+如果只想要获得里面的元素节点，则需要专门处理。所以我们一般不提倡使用childNodes
+parentNode.children(非标准)
+parentNode.children 是一个只读属性，返回所有的子元素节点
+它只返回子元素节点，其余节点不返回 （这个是我们重点掌握的）
+虽然 children 是一个非标准，但是得到了各个浏览器的支持，因此我们可以放心使用
+<body>
+    <ul>
+        <li>我是li</li>
+        <li>我是li</li>
+        <li>我是li</li>
+        <li>我是li</li>
+    </ul>
+    <ol>
+        <li>我是li</li>
+        <li>我是li</li>
+        <li>我是li</li>
+        <li>我是li</li>
+    </ol>
+    <script>
+        // DOM 提供的方法（API）获取
+        var ul = document.querySelector('ul');
+        var lis = ul.querySelectorAll('li');
+        // 1. 子节点  childNodes 所有的子节点 包含 元素节点 文本节点等等
+        console.log(ul.childNodes);
+        console.log(ul.childNodes[0].nodeType);
+        console.log(ul.childNodes[1].nodeType);
+        // 2. children 获取所有的子元素节点 也是我们实际开发常用的
+        console.log(ul.children);
+    </script>
+</body>
+
+
+5.3.1、第一个子结点
+parentNode.firstChild
+firstChild 返回第一个子节点，找不到则返回null
+同样，也是包含所有的节点
+5.3.2、最后一个子结点
+parentNode.lastChild
+lastChild 返回最后一个子节点，找不到则返回null
+同样，也是包含所有的节点
+<body>
+    <ol>
+        <li>我是li1</li>
+        <li>我是li2</li>
+        <li>我是li3</li>
+        <li>我是li4</li>
+        <li>我是li5</li>
+    </ol>
+    <script>
+        var ol = document.querySelector('ol');
+        // 1. firstChild 第一个子节点 不管是文本节点还是元素节点
+        console.log(ol.firstChild);
+        console.log(ol.lastChild);
+        // 2. firstElementChild 返回第一个子元素节点 ie9才支持
+        console.log(ol.firstElementChild);
+        console.log(ol.lastElementChild);
+        // 3. 实际开发的写法  既没有兼容性问题又返回第一个子元素
+        console.log(ol.children[0]);			//第一个子元素节点
+        console.log(ol.children[ol.children.length - 1]);//最后一个子元素节点
+    </script>
+</body>
+
+
+
+5.3.3、第一个子结点(兼容性)
+parentNode.firstElementChild
+firstElementChild 返回第一个子节点，找不到则返回null
+有兼容性问题，IE9以上才支持
+5.3.4、最后一个子结点(兼容性)
+parentNode.lastElementChild
+lastElementChild 返回最后一个子节点，找不到则返回null
+有兼容性问题，IE9以上才支持
+5.3.5、解决方案
+实际开发中，firstChild 和 lastChild 包含其他节点，操作不方便，而 firstElementChild 和 lastElementChild 又有兼容性问题，那么我们如何获取第一个子元素节点或最后一个子元素节点呢？
+解决方案
+如果想要第一个子元素节点，可以使用 parentNode.chilren[0]
+如果想要最后一个子元素节点，可以使用
+// 数组元素个数减1 就是最后一个元素的索引号
+parentNode.chilren[parentNode.chilren.length - 1]
+
+<body>
+    <ol>
+        <li>我是li1</li>
+        <li>我是li2</li>
+        <li>我是li3</li>
+        <li>我是li4</li>
+    </ol>
+    <script>
+        var ol = document.querySelector('ol');
+        // 1.firstChild 获取第一个子结点的，包含文本结点和元素结点
+        console.log(ol.firstChild);
+        // 返回的是文本结点 #text(第一个换行结点)
+        
+        console.log(ol.lastChild);
+        // 返回的是文本结点 #text(最后一个换行结点)
+        // 2. firstElementChild 返回第一个子元素结点
+        console.log(ol.firstElementChild);
+        // <li>我是li1</li>
+        
+        // 第2个方法有兼容性问题，需要IE9以上才支持
+        // 3.实际开发中，既没有兼容性问题，又返回第一个子元素
+        console.log(ol.children[0]);
+        // <li>我是li1</li>
+        console.log(ol.children[3]);
+        // <li>我是li4</li>
+        // 当里面li个数不唯一时候，需要取到最后一个结点时这么写
+        console.log(ol.children[ol.children.length - 1]);
+    </script>
+</body>
+
+
