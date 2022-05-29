@@ -1,0 +1,408 @@
+9.迭代器
+概述：
+遍历器（Iterator，是Symbol的一个内置值）就是一种机制。它是一种接口，为各种不同的数据结构提供统一的访问机制。任何数
+据结构只要部署 Iterator 接口（就是对象里的一个属性[函数  self]），就可以完成遍历操作；
+特性：
+ES6 创造了一种新的遍历命令 for...of 循环，Iterator 接口主要供 for...of 消费；（只要你这个数据结构部署了Iterator接口，就可以使用for...of来遍历数据）
+原生具备 iterator 接口的数据(可用 for of 遍历)：
+Array；
+Arguments；
+Set；
+Map；
+String；
+TypedArray；
+NodeList；
+工作原理：
+1. 创建一个指针对象，指向当前数据结构的起始位置；
+2. 第一次调用对象的 next 方法，指针自动指向数据结构的第一个成员；
+3. 接下来不断调用 next 方法，指针一直往后移动，直到指向最后一个成员；
+4. 每调用 next 方法返回一个包含 value 和 done 属性（是否完成的状态）的对象；
+注：需要自定义遍历（按照自己的意愿去遍历）数据的时候，要想到迭代器
+<script>
+        // 声明一个数组
+        const xiyou = ['唐僧', '孙悟空', '猪八戒', '沙僧'];
+        // 使用 for...of 遍历数组
+        //for in循环v保存的是键名 数组对应的键名就是index
+        for (let v in xiyou) {
+            console.log(v);
+        }
+        // 使用 for...ofv保存的是键值 数组对应的键名就是value
+        for (let v of xiyou) {
+            console.log(v);
+        }
+        //用iterator手动遍历数组
+        let iterator = xiyou[Symbol.iterator]();
+        // 调用对象的next方法
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        // 重新初始化对象，指针也会重新回到最前面
+        let iterator1 = xiyou[Symbol.iterator]();
+        console.log(iterator1.next());
+    </script>
+运行结果：
+数组xiyou里的symbol.iterator
+
+
+
+
+
+注：需要自定义遍历（按照自己的意愿去遍历）数据的时候，要想到迭代器
+迭代器自定义遍历对象：
+实现10需求：用for of来遍历而且每次返回的结果是stus:这个数组的成员
+<
+    <script>
+        // 声明一个对象
+        const banji = {
+            name: "终极一班",
+            stus: [
+                'xiaoming',
+                'xiaoning',
+                'xiaotian',
+                'knight'
+            ],
+            [Symbol.iterator]() {
+                // 索引变量
+                let index = 0;
+                // 保存this
+                let _this = this;
+                return {
+                    next: function () {
+                        if (index < _this.stus.length) {
+                            const result = {
+                                value: _this.stus[index],
+                                done: false
+                            };
+                            // 下标自增
+                            index++;
+                            // 返回结果
+                            return result;
+                        } else {
+                            return {
+                                value: undefined,
+                                done: true
+                            };
+                        }
+                    }
+                };
+            }
+        }
+        // 遍历这个对象
+        for (let v of banji) {
+            console.log(v)
+        }
+    </script>
+
+
+
+10.生成器
+概述：
+生成器函数是 ES6 提供的一种异步编程解决方案，语法行为与传统函数完全不同
+ps：如果程序调⽤某个⽅法，等待其执⾏全部处理后才能继续执⾏，我们称其为同步的。相反，在处理完成之前就返回调⽤⽅法则是异步的。
+我们在编程语⾔的流程中添加了异步控制的部分，这部分的编程可以称之为异步编程，比如回调函数
+函数指针的调用，即是一个通过函数指针调用的函数；
+如果你把函数的指针（地址）作为参数传递给另一个函数，当这个指针被用来调用其所指向的函数时，就说这是回调函数。
+// 生成器其实就是一个特殊的函数
+        // 生成器作用:进行异步编程 以前用的是纯回调函数 node fs ajax mongodb
+        // 特殊点3：生成器函数内可以用yield语句：函数代码的分隔符，三个yield语句把函数分割成四块，调用一个next()语句执行一块儿(yield后的表达式执行但需要log语句才能输出yield后面的字面量或者语句)
+        //特殊点1：加*；*位置靠左靠右在中间都行
+        function* gen() {
+            console.log(111);
+            yield '一只没有耳朵';
+            console.log(222);
+            yield '一只没有尾部';
+            console.log(333);
+            yield '真奇怪';
+            console.log(444);
+        }
+        //特殊点2：执行比较特殊，必要调用(iterator)迭代器next()方法才能执行
+        let iterator = gen();
+        console.log(iterator.next());//直接输出next()得到的value值与下面for of语句输出结果一致
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log("遍历：");
+        //遍历，每一次调用返回的结果是yield后面的表达式
+        for (let v of gen()) {
+            console.log(v);
+        }
+
+
+
+ // 生成器其实就是一个特殊的函数
+        // 异步编程 纯回调函数 node fs ajax mongodb
+        // yield：函数代码的分隔符
+        function* gen() {
+            console.log(111);
+            yield '一只没有耳朵';
+            console.log(222);
+            yield '一只没有尾部';
+            console.log(333);
+            yield '真奇怪';
+            console.log(444);
+        }
+        let iterator = gen();
+        iterator.next();//每调用一次next，就执行一块儿yield分割出的一块儿！！！虽然不输出yield后面的语句但是会执行！！！
+        iterator.next();
+        iterator.next();
+        iterator.next();
+        console.log("遍历：");
+        //遍历
+        // for (let v of gen()) {
+        //     console.log(v);
+        // }
+
+
+ function* gen() {
+            console.log(111);
+            yield '一只没有耳朵';
+            console.log(222);
+            yield '一只没有尾部';
+            console.log(333);
+            yield '真奇怪';
+            console.log(444);
+        }
+        let iterator = gen();
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log(iterator.next());
+        console.log("遍历：");
+注意：log语句内部先执行，即先执行111输出yield后的字面量或者语句
+
+
+function* gen() {
+            console.log(111);
+            yield '一只没有耳朵';
+            console.log(222);
+            yield '一只没有尾部';
+            console.log(333);
+            yield '真奇怪';
+            console.log(444);
+        }
+        let iterator = gen();
+        // console.log(iterator.next());
+        // console.log(iterator.next());
+        // console.log(iterator.next());
+        // console.log(iterator.next());
+        console.log("遍历：");
+        //遍历
+        for (let v of gen()) {
+            console.log(v);
+        }
+
+生成器函数的参数传递:
+ function* gen(arg) {
+            console.log(arg);//直接在生成器函数输出参数 执行不出来结果
+            yield 111;
+            yield 222;
+            yield 333;
+        }
+        let iterator = gen("AAA");
+        
+        
+ function* gen(arg) {
+            console.log(arg);
+            yield 111;
+            yield 222;
+            yield 333;
+        }
+        let iterator = gen("AAA");
+        console.log(iterator.next()); // 这样会执行AAA yield 111;
+
+next()方法是可以传入参数的，传入的参数作为第一条(上一条)语句yield 111的返回结果
+ function* gen(arg) {
+            console.log(arg);
+            let one = yield 111;
+            console.log(one);
+            let two = yield 222;
+            console.log(two);
+            let three = yield 333;
+            console.log(three);
+        }
+        let iterator = gen("AAA");
+        console.log(iterator.next()); // 会执行yield 111;
+        // next()方法是可以传入参数的，传入的参数作为第一条(上一条)语句yield 111的返回结果
+        console.log(iterator.next("BBB")); // 会执行yield 222;
+        console.log(iterator.next("CCC")); // 会执行yield 333;
+        console.log(iterator.next("DDD")); // 继续往后走，未定义;
+
+生成器函数实例
+整个js它本身是一个异步单线程的，例如文件操作 网络操作（ajax，request） 数据库操作
+本案例用一个定时器来演示生成器函数在异步编程中的表现
+ // 异步编程 文件操作 网络操作（ajax，request） 数据库操作
+        // 定时器需求：1s后控制台输出111 再过2s后控制台输出222 再过3s后控制台输出333 一共6秒
+        // 一种做法：回调地狱
+        // setTimeout(() => {
+        //     console.log(111);
+        //     setTimeout(() => {
+        //         console.log(222);
+        //         setTimeout(() => {
+        //             console.log(333);
+        //         }, 3000)
+        //     }, 2000)
+        // }, 1000)
+        // 另一种做法
+        //1.声明三个函数，三个函数分别实现三个异步任务
+        //2.写一个生成器函数，里面把三个任务放进来，在yield之后
+        //3.调用生成器函数
+        function one() {
+            setTimeout(() => {
+                console.log(111);
+                iterator.next();
+            }, 1000)
+        }
+        function two() {
+            setTimeout(() => {
+                console.log(222);
+                iterator.next();
+            }, 1000)
+        }
+        function three() {
+            setTimeout(() => {
+                console.log(333);
+                iterator.next();
+            }, 1000)
+        }
+        function* gen() {
+            yield one();
+            yield two();
+            yield three();
+        }
+        // 调用生成器函数
+        let iterator = gen();
+        iterator.next();//下一次的调用即next（）写在第一个函数里这样第一个函数执行完就可以执行下一个函数
+
+
+// 异步编程 文件操作 网络操作（ajax，request） 数据库操作
+        // 定时器需求：1s后控制台输出111 再过2s后控制台输出222 再过3s后控制台输出333 一共6秒
+        // 一种做法：回调地狱
+        // setTimeout(() => {
+        //     console.log(111);
+        //     setTimeout(() => {
+        //         console.log(222);
+        //         setTimeout(() => {
+        //             console.log(333);
+        //         }, 3000)
+        //     }, 2000)
+        // }, 1000)
+        // 另一种做法
+        //1.声明三个函数，三个函数分别实现三个异步任务
+        //2.写一个生成器函数，里面把三个任务放进来，在yield之后
+        //3.调用生成器函数
+        function one() {
+            setTimeout(() => {
+                console.log(111);
+                console.log(iterator.next());
+            }, 1000)
+        }
+        function two() {
+            setTimeout(() => {
+                console.log(222);
+                console.log(iterator.next());
+            }, 1000)
+        }
+        function three() {
+            setTimeout(() => {
+                console.log(333);
+                console.log(iterator.next());
+            }, 1000)
+        }
+        function* gen() {
+            yield one();
+            yield two();
+            yield three();
+        }
+        // 调用生成器函数
+        let iterator = gen();
+        console.log(iterator.next());//下一次的调用即next（）写在第一个函数里这样第一个函数执行完就可以执行下一个函数
+
+？为什么先执行log语句再执行log内的语句？
+案例2：
+ // 模拟获取（也是有先后顺序的）: 先获取用户数据 再获取订单数据 再获取商品数据
+        function getUsers() {
+            setTimeout(() => {
+                let data = "用户数据";
+                // 第二次调用next，传入参数data，作为第一个yield语句的返回值
+                iterator.next(data); // 这里将data传入
+            }, 1000);
+        }
+        function getOrders() {
+            setTimeout(() => {
+                let data = "订单数据";
+                iterator.next(data); // 这里将data传入
+            }, 1000);
+        }
+        function getGoods() {
+            setTimeout(() => {
+                let data = "商品数据";
+                iterator.next(data); // 这里将data传入
+            }, 1000);
+        }
+        function* gen() {
+            let users = yield getUsers();
+            console.log(users);//一秒钟之后输出，因为是第二次调用next才返回的user值
+            let orders = yield getOrders();
+            console.log(orders);//两秒钟之后输出
+            let goods = yield getGoods();
+            console.log(goods); // 这种操作有点秀啊！//三秒钟之后输出
+        }
+        let iterator = gen();
+        iterator.next();
+
+11、Promise（重点）
+概述：
+Promise 是 ES6 引入的异步编程的新解决方案（解决回调地狱问题）。语法上 Promise 是一个构造函数，用来封装异步操作
+并可以获取其成功或失败的结果；
+1. Promise 构造函数: Promise (excutor) {}；
+2. Promise.prototype.then 方法；
+3. Promise.prototype.catch 方法；
+// 1.实例化 Promise 对象
+        // Promise 对象三种状态：初始化、成功、失败
+        const p = new Promise(function (resolve, reject) {
+            //2、执行定时器这个异步操作
+            setTimeout(function () {
+                // 成功
+                let data = "数据库中的数据";
+                // 3、得到数据之后，可以通过resolve, reject改变Promise 对象的状态，
+                // 3、调用resolve方法，这个Promise 对象的状态就会变成成功
+                resolve(data);
+            }, 1000);
+        });
+        // 成功
+        // 4、Promise 对象的状态为成功后，可以调用 Promise 对象的then方法，两个参数为函数,成功的形参一般为value，失败的形参一般为reason
+        p.then(function (value) { // 当Promise 对象的状态为成功时，即异步操作代码里调用了调用resolve时，then方法就会执行
+            console.log(value);//它的第一个回调函数代码，输出value值一秒钟后得到数据库中的数据
+        }, function (reason) { // 失败
+            console.log(reason);
+        });
+
+
+
+// 1.实例化 Promise 对象
+        // Promise 对象三种状态：初始化、成功、失败
+        const p = new Promise(function (resolve, reject) {
+            //2、执行定时器这个异步操作
+            setTimeout(function () {
+                // // 成功
+                // let data = "数据库中的数据";
+                // // 3、得到数据之后，可以通过resolve, reject改变Promise 对象的状态，
+                // // 3、调用resolve方法，这个Promise 对象的状态就会变成成功
+                // resolve(data);
+                //3、如果调用读取数据失败
+                let err = "数据读取失败了！";
+                reject(err);// 3、调用reject方法，这个Promise 对象的状态就会变成失败
+            }, 1000);
+        });
+        // 成功
+        // 4、Promise 对象的状态为成功/失败后，可以调用 Promise 对象的then方法，两个参数为函数,成功的形参一般为value，失败的形参一般为reason
+        p.then(function (value) { // 当Promise 对象的状态为成功时，即异步操作代码里调用了调用resolve时，then方法就会执行
+            console.log(value);//它的第一个回调函数代码，输出value值一秒钟后得到数据库中的数据
+        }, function (reason) { // 4、当Promise 对象的状态为失败时，即异步操作代码里调用了调用reject时，then方法就会执行
+            console.log(reason);//4、它的第二个回调函数代码，输出reject值一秒钟后得到数据读取失败
+            console.error(reason);//4、它的第二个回调函数代码，输出reject值一秒钟后得到数据读取失败
+        });
+
+
