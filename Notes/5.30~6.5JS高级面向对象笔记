@@ -1,0 +1,1640 @@
+1、面向对象
+面向对象：是把事务分解成一个个对象，然后由对象之间分工合作
+举例：将大象进冰箱，面向对象的做法
+先找出对象，并写出这些对象的功能
+1.大象对象
+·进去
+2.冰箱对象
+·打开
+·关闭
+3.使用大象和冰箱的功能
+面向对象是以对象功能来划分问题，而不是步骤。
+
+面向对象编程具有灵活、代码可复用、容易维护和开发的优点，更适合多人合作的大型软件项目。
+面向对象的特征：
+封装性 继承性 多态性：同一个对象在不同时刻可以体现出不同的状态
+
+
+
+ps：两大编程思想：面向过程、面向对象
+面向过程（POP）：就是分析出解决问题所需要的步骤，然后用函数把这些步骤一步一步实现，使用的时候再一个一个的依次调用就可以了
+将大象进冰箱，面向过程的做法：打开冰箱，把大象放进去，关上冰箱
+面向过程，就是按照我们分析好了的步骤，按照步骤解决问题。
+
+面向过程和面向对象的对比：
+面向过程：
+优点：性能比面向对象高，适合跟硬件联系很紧密的东西，例如单片机就采用的面向过程编程。
+缺点：没有面向对象易维护、易复用、易扩展
+面向对象：
+优点：易维护、易复用、易扩展，由于面向对象有封装、继承、多态性的特性，可以设计出低耦合的系统，使系统 更加灵活、更加易于维护
+缺点：性能比面向过程低
+用面向过程的方法写出来的程序是一份蛋炒饭，而用面向对象写出来的程序是一份盖浇饭。
+1.1、对象
+序言：
+面向对象更贴近我们的实际生活, 可以使用面向对象描述现实世界事物.  但是事物分为具体的事物和抽象的事物
+抽象的(泛指的)
+具体的 (特指的)
+面向对象的思维特点：
+1.抽取（抽象）对象共用的属性和行为组织(封装)成一个类(模板)
+2.对类进行实例化, 获取类的对象
+面向对象编程我们考虑的是有哪些对象，按照面向对象的思维特点,不断的创建对象,使用对象,指挥对象做事情.
+
+现实生活中：万物皆对象，对象是一个具体的事物，看得见摸得着的实物。例如，一本书、一辆汽车、一个人可以是“对象”，一个数据库、一张网页、一个与远程服务器的连接也可以是“对象”。
+在 JavaScript 中，对象是一组无序的相关属性和方法的集合，所有的事物都是对象，例如字符串、数值、数组、函数等。
+对象是由属性和方法组成的
+· 属性：事物的特征，在对象中用属性来表示
+· 方法：事物的行为，在对象中用方法来表示
+1.2、类
+在 ES6 中新增加了类的概念，可以使用 class 关键字声明一个类，之后以这个类来实例化对象。
+类抽象了对象的公共部分，它泛指某一大类（class）
+对象特指某一个，通过类实例化一个具体的对象
+1.2.1、创建类
+class name {
+    // class body
+}
+· 创建实例
+var XX = new name();
+注意：类必须使用new 实例化对象
+1.2.2、构造函数
+constructor() 方法是类的构造函数(默认方法)，用于传递参数,返回实例对象，就不需要return了，通过 new 命令生成对象实例时，自动调用该方法。如果没有显示定义, 类内部会自动给我们创建一个constructor()
+ps：类里所有的函数都不需要加function
+<script>
+    // 1. 创建类 class  创建一个 明星类
+    class Star {
+        // 类的共有属性放到 constructor 构造器或者构造函数
+        constructor(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+    }
+
+    // 2. 利用类创建对象 new
+    var ldh = new Star('刘德华', 18);
+    var zxy = new Star('张学友', 20);
+    console.log(ldh);
+    console.log(zxy);
+    //(1) 通过class 关键字创建类, 类名我们还是习惯性定义首字母大写
+    //(2) 类里面有个constructor 函数,可以接受传递过来的参数,同时返回实例对象
+    //(3) constructor 函数 只要 new 生成实例时,就会自动调用这个函数, 如果我们不写这个函数,类也会自动生成这个函数
+    //(4) 生成实例 new 不能省略
+    //(5) 最后注意语法规范, 创建类 类名后面不要加小括号,生成实例 类名后面加小括号, 构造函数不需要加function
+</script>
+通过 class 关键字创建类，类名我们还是习惯性定义首字母大写
+类里面有个 constructor函数，可以接收传递过来的参数，同时返回实例对象
+constructor函数只要 new 生成实例时，就会自动调用这个函数，如果我们不写这个函数，类也会自动生成这个函数
+最后注意语法规范
+创建类➡类名后面不要加小括号
+生成实例➡类名后面加小括号
+构造函数不需要加 function 关键字
+
+执行过程：
+new一个对象ldh，对象实例化时调用constructor（）并且传递参数’刘德华‘给constructor的参数uname，uname赋值给this.uname（this就是创建的实例ldh这个对象）
+1.2.3、类中添加方法
+语法：
+class Person {
+  constructor(name,age) {   
+      // 类的共有属性放到constructor 称为构造器或者构造函数
+      this.name = name;
+      this.age = age;
+    }
+   say() {
+      console.log(this.name + '你好');
+   }
+}      
+var ldh = new Person('刘德华', 18); 
+ldh.say() 
+注意： 多个方法之间不能加逗号分隔，同时方法不需要添加 function 关键字。
+<script>
+    // 1. 创建类 class  创建一个 明星类
+    class Star {
+        // 类的共有属性放到 constructor 里面
+        constructor(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+        sing(song) {
+            console.log(this.uname + song);
+        }
+    }
+
+    // 2. 利用类创建对象 new
+    var ldh = new Star('刘德华', 18);
+    var zxy = new Star('张学友', 20);
+    console.log(ldh);
+    console.log(zxy);
+    // (1) 我们类里面所有的函数不需要写function 
+    // (2) 多个函数方法之间不需要添加逗号分隔
+    ldh.sing('冰雨');
+    zxy.sing('李香兰');
+</script>
+
+类的共有属性放到constructor 里面
+类里面的函数都不需要写 function 关键字
+1.3 、类的继承
+现实中的继承：子承父业，比如我们都继承了父亲的姓。
+程序中的继承：子类可以继承父类的一些属性和方法。
+语法：
+// 父类
+class Father {
+    constructor(){
+                
+    }
+    money(){
+      console.log(100)
+      }
+}
+// 子类继承父类
+class Son extends Father {
+    
+}
+var son = new Son();
+son.money();
+//100
+看一个实例：
+<script>
+    // 父类有加法方法
+    class Father {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        sum() {
+            console.log(this.x + this.y);
+        }
+    }
+    // 子类继承父类加法方法 同时 扩展减法方法
+    class Son extends Father {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    var son = new Son(5, 3);
+    son.sum();
+    //报错！因为sum()方法中的this.x,this.y,是指父类对象的xy，传参传的是子类对象的xy
+</script>
+
+
+1.4、super关键字
+super 关键字用于访问和调用对象父类上的函数，可以调用父类的构造函数，也可以调用父类的普通函数
+1.4.1、调用父类的构造函数
+语法：
+// 父类
+class Person {
+    constructor(surname){
+        this.surname = surname;
+    }
+}
+// 子类继承父类
+class Student entends Person {
+    constructor(surname,firstname) {
+        super(surname);					//调用父类的 constructor(surname)
+        this.firstname = firstname;		//定义子类独有的属性
+    }
+}
+注意：子类在构造函数中使用super,必须放到this前面（必须先调用父类的构造方法，在使用子类构造方法）
+案例：
+// 父类
+class Father {
+    constructor(surname){
+        this.surname = surname;
+    }
+    saySurname() {
+        console.log('我的姓是' + this.surname);
+    }
+}
+// 子类继承父类
+class Son entends Father {
+    constructor(surname,firstname) {
+        super(surname);					//调用父类的 constructor(surname)
+        this.firstname = firstname;		//定义子类独有的属性
+    }
+    sayFirstname() {
+        console.log('我的名字是:' + this.firstname);
+    }
+}
+
+var damao = new Son('刘','德华');
+damao.saySurname();//我的姓是刘
+damao.sayFirstname();//我的名字是德华
+
+（跟上面的内容一样这部分是自己写的）
+调用父类构造函数案例原理：
+1.子类实例化的函数参数（5,3）传递给子类构造函数constructor的xy，然后把xy传递给super里的参数xy，
+2.super调用了父类中的构造函数（constructor），然后把xy的值传递给constructor的xy，这时父类里的this.x和this.y分别等于5，3，sum（）就可以使用着两个参数了
+<script>
+    // 父类有加法方法
+    class Father {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        sum() {
+            console.log(this.x + this.y);
+        }
+    }
+    // 子类继承父类加法方法 同时 扩展减法方法
+    class Son extends Father {
+        constructor(x, y) {
+            super(x，y)；//调用父类中的构造函数
+        }
+    }
+    var son = new Son(5, 3);
+    son.sum();
+    //报错！因为sum()方法中的this.x,this.y,是指父类对象的xy，传参传的是子类对象的xy
+</script>
+
+1.4.2、调用父类的普通函数
+调用父类普通函数案例原理：
+ super.say() 就是调用父类中的普通函数 say()
+ // 继承中的属性或者方法查找原则: 就近原则
+ // 1. 继承中,如果实例化子类输出一个方法,先看子类有没有这个方法,如果有就先执行子类的
+ // 2. 继承中,如果子类里面没有,就去查找父类有没有这个方法,如果有,就执行父类的这个方法(就近原则)
+<script>
+        // super 关键字调用父类普通函数
+        class Father {
+            say() {
+                return '我是爸爸';
+            }
+        }
+        class Son extends Father {
+            say() {
+                // console.log('我是儿子');
+                console.log(super.say() + '的儿子');
+                // super.say() 就是调用父类中的普通函数 say()
+            }
+        }
+        var son = new Son();
+        son.say();//我是爸爸的儿子
+        
+        // 继承中的属性或者方法查找原则: 就近原则
+        // 1. 继承中,如果实例化子类输出一个方法,先看子类有没有这个方法,如果有就先执行子类的
+        // 2. 继承中,如果子类里面没有,就去查找父类有没有这个方法,如果有,就执行父类的这个方法(就近原则)
+    </script>
+1.4.3、子类继承父类方法同时扩展自己的方法
+super 必须在子类this之前调用
+即子类构造函数中使用super，必须放到this前面（必须先调用父类的构造方法，再使用子类构造方法）
+<script>
+    // 父类有加法方法
+    class Father {
+        constructor(x, y) {
+            this.x = x;
+            this.y = y;
+        }
+        sum() {
+            console.log(this.x + this.y);
+        }
+    }
+    // 子类继承父类加法方法 同时 扩展减法方法
+    class Son extends Father {
+        constructor(x, y) {
+            // 利用super 调用父类的构造函数
+            // super 必须在子类this之前调用
+            super(x, y);
+            this.x = x;
+            this.y = y;
+        }
+        subtract() {
+            console.log(this.x - this.y);
+        }
+    }
+    var son = new Son(5, 3);
+    son.subtract();
+    son.sum();
+</script>
+
+1.5、三个注意点
+在ES6中类没有变量提升，所以必须先定义类，才能通过类实例化对象
+类里面的共有属性和方法一定要加 this使用
+类里面的this指向：
+constructor 里面的 this指向实例对象
+方法里面的this指向这个方法的调用者
+    <script>
+        class Star {
+            constructor(uname, age) {
+                // constructor 里面的this 指向的是 创建的实例对象
+                this.uname = uname;
+                this.age = age;
+                }
+            sing() {
+                console.log(uname);//报错！uname is not defined，sing()方法里没有uname这个参数
+                console.log(this.uname); //我们想要的是实例化对象里的uname，this指向的就是实例化对象，所以要用this.uname
+                //类里面的共有属性和方法一定要加 this使用
+            }
+            
+        }
+        var ldh = new Star('刘德华');
+        ldh.sing()；
+
+        // 1. 在 ES6 中类没有变量提升，所以必须先定义类，才能通过类实例化对象
+
+        // 2. 类里面的共有的属性和方法一定要加this使用.
+    </script>
+</body>
+
+
+<body>
+    <button>点击</button>
+    <script>
+        var that;
+        var _that;
+        class Star {
+            constructor(uname, age) {
+                // constructor 里面的this 指向的是 创建的实例对象
+                that = this;
+                this.uname = uname;
+                this.age = age;
+                // this.sing();
+                //共有方法一定要加this，不然报错sing is not defined！ sing()这个方法是在类里面的，是属于被声明的实例对象的，要告诉别人到底哪一个对象调用了sing()；
+                this.btn = document.querySelector('button');//btn也是属于ldh这个对象的
+                this.btn.onclick = this.sing;
+            }
+            sing() {
+            // 这个sing方法里面的this 指向的是 btn 这个按钮,因为这个按钮调用了这个函数
+                console.log(this); //<button>点击</button>
+                console.log(this.uname); //undefined
+                console.log(that.uname); 
+                //that是一个全局变量，在任何一个地方都可以使用that这个全局变量，that里面存储的是constructor里面的this
+            }
+            dance() {
+                // 这个dance里面的this 指向的是实例对象 ldh 因为ldh 调用了这个函数
+                _that = this;
+                console.log(this);
+            }
+        }
+        var ldh = new Star('刘德华');
+        console.log(that === ldh);//true;constructor 里面的 this指向实例对象
+        ldh.dance();
+        console.log(_that === ldh);//true;方法里面的this指向这个方法的调用者
+
+        // 1. 在 ES6 中类没有变量提升，所以必须先定义类，才能通过类实例化对象
+
+        // 2. 类里面的共有的属性和方法一定要加this使用.
+    </script>
+</body>
+
+面向对象案例
+面向对象的tab栏切换
+
+功能需求:
+点击 tab栏,可以切换效果.
+点击 + 号, 可以添加 tab 项和内容项.
+点击 x 号, 可以删除当前的tab项和内容项.
+双击tab项文字或者内容项文字,可以修改里面的文字内容.
+
+抽象对象:  Tab 对象
+该对象具有切换功能
+该对象具有添加功能
+该对象具有删除功能
+该对象具有修改功能
+
+模块划分
+class Tab {
+    constructor(id) {
+        // 获取元素
+       
+        this.main = document.querySelector(id);
+        this.lis = this.main.querySelector('li');
+        // li的父元素
+        this.section = this.main.querySelector('section');        
+        this.init();//只要有对象被new就会调用constrctor函数，从而页面一加载就可以调用初始化函数init()
+    }
+    init() {           
+            // init 初始化操作让相关的元素绑定事件
+           
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].index = i;                
+
+            }
+        }
+       
+        // 1. 切换功能
+    toggleTab() {
+}            
+        // 2. 添加功能
+    addTab() {}
+        // 3. 删除功能
+    removeTab() {}
+        // 4. 修改功能
+    editTab() { };
+        
+
+}
+new Tab('#tab');
+切换功能模块
+var that;
+class Tab {
+    constructor(id) {
+        that = this;                  
+        // 获取元素
+ ，给当前实例对象添加这些元素属性      
+        this.main = document.querySelector(id);
+        this.lis = this.main.querySelector('li');
+        // li的父元素
+        this.section = this.main.querySelector('section');        
+        this.init();//只要有对象被new就会调用constrctor函数，从而页面一加载就可以调用初始化函数init()
+    }
+    init() {           
+            // init 初始化操作让相关的元素绑定事件
+           
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].onclick = this.toggleTab;//不能写this.toggleTab()；这样直接就调用函数了               
+
+            }
+        }
+       
+        // 1. 切换功能
+    toggleTab() {
+        that.clearClass();//记得写that，因为只有当前实例对象里有clearClass()函数，this代表的lis可没有这个函数
+        this.lis = this.main.querySelectorAll('li');
+        that.sections = this.main.querySelectorAll('section');
+    
+}
+       // 清除所有li 和section 的类
+    clearClass() {
+            for (var i = 0; i < this.lis.length; i++) {//这里写this是可以的，因为clearClass()是that调用的 也就是当前实例对象
+                this.lis[i].className = '';
+                this.sections[i].className = '';
+            }
+        }           
+        // 2. 添加功能
+    addTab() {}
+        // 3. 删除功能
+    removeTab() {}
+        // 4. 修改功能
+    editTab() { };
+        
+
+}
+new Tab('#tab');
+
+面向对象版 tab 栏切换 添加功能
+点击 + 可以实现添加新的选项卡和内容
+第一步: 创建新的选项卡li 和 新的 内容 section
+第二步: 把创建的两个元素追加到对应的父元素中.
+
+以前的做法:  动态创建元素 createElement  , 但是元素里面内容较多, 需要innerHTML赋值,在 appendChild 追加到父元素里面.
+现在高级做法:   利用 insertAdjacentHTML() 可以直接把字符串格式元素添加到父元素中
+appendChild 不支持追加字符串的子元素, insertAdjacentHTML 支持追加字符串的元素
+insertAdjacentHTML(追加的位置,‘要追加的字符串元素’)
+追加的位置有: beforeend  插入元素内部的最后一个子节点之后
+该方法地址:  https://developer.mozilla.org/zh-CN/docs/Web/API/Element/insertAdjacentHTML
+var that;
+class Tab {
+    constructor(id) {
+        that = this;                  
+        // 获取元素
+ ，给当前实例对象添加这些元素属性      
+        this.main = document.querySelector(id);
+         
+        this.add = this.main.querySelector('.tabadd');    
+        // li的父元素
+        this.ul = this.main.querySelector('.fisrstnav ul:first-child');  
+        // section 父元素
+        this.fsection = this.main.querySelector('.tabscon');
+        this.init();//只要有对象被new就会调用constrctor函数，从而页面一加载就可以调用初始化函数init()
+        
+    }
+    init() {  
+             this.updateNode();                      
+            // init 初始化操作让相关的元素绑定事件
+   
+             this.add.onclick = this.addTab;
+        
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].onclick = this.toggleTab;//不能写this.toggleTab()；这样直接就调用函数了               
+
+            }
+        }
+ 
+      // 获取所有的小li和section   
+      // 因为我们动态添加元素 需要从新获取对应的元素
+    updateNode() {
+            this.lis = this.main.querySelectorAll('li');
+            this.sections = this.main.querySelectorAll('section');
+            this.remove = this.main.querySelectorAll('.icon-guanbi');
+            this.spans = this.main.querySelectorAll('.fisrstnav li span:first-child');
+        }                       
+        // 1. 切换功能
+    toggleTab() {
+        that.clearClass();//记得写that，因为只有当前实例对象里有clearClass()函数，this代表的lis可没有这个函数
+        this.lis = this.main.querySelectorAll('li');
+        that.sections = this.main.querySelectorAll('section');
+    
+}
+       // 清除所有li 和section 的类
+    clearClass() {
+            for (var i = 0; i < this.lis.length; i++) {//这里写this是可以的，因为clearClass()是that调用的 也就是当前实例对象
+                this.lis[i].className = '';
+                this.sections[i].className = '';
+            }
+        }           
+        // 2. 添加功能
+    addTab() {
+         that.clearClass();
+            // (1) 创建li元素和section元素 
+            var random = Math.random();
+            var li = '<li class="liactive"><span>新选项卡</span><span class="iconfont icon-guanbi"></span></li>';
+            var section = '<section class="conactive">测试 ' + random + '</section>';
+            // (2) 把这两个元素追加到对应的父元素里面
+            that.ul.insertAdjacentHTML('beforeend', li);
+            that.fsection.insertAdjacentHTML('beforeend', section);
+            that.init();    
+    }
+        // 3. 删除功能
+    removeTab() {}
+        // 4. 修改功能
+    editTab() { };
+        
+
+}
+new Tab('#tab');
+
+var that;
+class Tab {
+    constructor(id) {
+        // 获取元素
+        that = this;
+        this.main = document.querySelector(id);
+        this.add = this.main.querySelector('.tabadd');
+        // li的父元素
+        this.ul = this.main.querySelector('.fisrstnav ul:first-child');
+        // section 父元素
+        this.fsection = this.main.querySelector('.tabscon');
+        this.init();
+    }
+    init() {
+            this.updateNode();
+            // init 初始化操作让相关的元素绑定事件
+            this.add.onclick = this.addTab;
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].index = i;
+                this.lis[i].onclick = this.toggleTab;
+                this.remove[i].onclick = this.removeTab;
+                this.spans[i].ondblclick = this.editTab;
+                this.sections[i].ondblclick = this.editTab;
+
+            }
+        }
+        // 因为我们动态添加元素 需要从新获取对应的元素
+    updateNode() {
+            this.lis = this.main.querySelectorAll('li');
+            this.sections = this.main.querySelectorAll('section');
+            this.remove = this.main.querySelectorAll('.icon-guanbi');
+            this.spans = this.main.querySelectorAll('.fisrstnav li span:first-child');
+        }
+        // 1. 切换功能
+    toggleTab() {
+            // console.log(this.index);
+            that.clearClass();
+            this.className = 'liactive';
+            that.sections[this.index].className = 'conactive';
+        }
+        // 清除所有li 和section 的类
+    clearClass() {
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].className = '';
+                this.sections[i].className = '';
+            }
+        }
+        // 2. 添加功能
+    addTab() {
+            that.clearClass();
+            // (1) 创建li元素和section元素 
+            var random = Math.random();
+            var li = '<li class="liactive"><span>新选项卡</span><span class="iconfont icon-guanbi"></span></li>';
+            var section = '<section class="conactive">测试 ' + random + '</section>';
+            // (2) 把这两个元素追加到对应的父元素里面
+            that.ul.insertAdjacentHTML('beforeend', li);
+            that.fsection.insertAdjacentHTML('beforeend', section);
+            that.init();
+        }
+        // 3. 删除功能
+    removeTab(e) {
+            e.stopPropagation(); // 阻止冒泡 防止触发li 的切换点击事件
+            var index = this.parentNode.index;
+            console.log(index);
+            // 根据索引号删除对应的li 和section   remove()方法可以直接删除指定的元素
+            that.lis[index].remove();
+            that.sections[index].remove();
+            that.init();
+            // 当我们删除的不是选中状态的li 的时候,原来的选中状态li保持不变
+            if (document.querySelector('.liactive')) return;
+            // 当我们删除了选中状态的这个li 的时候, 让它的前一个li 处于选定状态
+            index--;
+            // 手动调用我们的点击事件  不需要鼠标触发
+            that.lis[index] && that.lis[index].click();
+        }
+        // 4. 修改功能
+    editTab() {
+        var str = this.innerHTML;
+        // 双击禁止选定文字
+        window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+        // alert(11);
+        this.innerHTML = '<input type="text" />';
+        var input = this.children[0];
+        input.value = str;
+        input.select(); // 文本框里面的文字处于选定状态
+        // 当我们离开文本框就把文本框里面的值给span 
+        input.onblur = function() {
+            this.parentNode.innerHTML = this.value;
+        };
+        // 按下回车也可以把文本框里面的值给span
+        input.onkeyup = function(e) {
+            if (e.keyCode === 13) {
+                // 手动调用表单失去焦点事件  不需要鼠标离开操作
+                this.blur();
+            }
+        }
+    }
+
+}
+new Tab('#tab');
+面向对象版 tab 栏切换 删除功能
+点击 × 可以删除当前的li选项卡和当前的section
+X是没有索引号的, 但是它的父亲li 有索引号, 这个索引号正是我们想要的索引号
+所以核心思路是: 点击 x 号可以删除这个索引号对应的 li 和 section
+但是,当我们动态删除新的li和索引号时,也需要重新获取 x 这个元素.  需要调用init 方法
+var that;
+class Tab {
+    constructor(id) {
+        that = this;                  
+        // 获取元素
+ ，给当前实例对象添加这些元素属性      
+        this.main = document.querySelector(id);
+         
+        this.add = this.main.querySelector('.tabadd');    
+        // li的父元素
+        this.ul = this.main.querySelector('.fisrstnav ul:first-child');  
+        // section 父元素
+        this.fsection = this.main.querySelector('.tabscon');
+        this.init();//只要有对象被new就会调用constrctor函数，从而页面一加载就可以调用初始化函数init()
+        
+    }
+    init() {  
+             this.updateNode();                      
+            // init 初始化操作让相关的元素绑定事件
+   
+             this.add.onclick = this.addTab;
+        
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].onclick = this.toggleTab;//不能写this.toggleTab()；这样直接就调用函数了   
+                 this.remove[i].onclick = this.removeTab;            
+
+            }
+        }
+ 
+      // 获取所有的小li和section   
+      // 因为我们动态添加元素 需要从新获取对应的元素
+    updateNode() {
+            this.lis = this.main.querySelectorAll('li');
+            this.sections = this.main.querySelectorAll('section');
+            this.remove = this.main.querySelectorAll('.icon-guanbi');
+            this.spans = this.main.querySelectorAll('.fisrstnav li span:first-child');
+        }                       
+        // 1. 切换功能
+    toggleTab() {
+        that.clearClass();//记得写that，因为只有当前实例对象里有clearClass()函数，this代表的lis可没有这个函数
+        this.lis = this.main.querySelectorAll('li');
+        that.sections = this.main.querySelectorAll('section');
+    
+}
+       // 清除所有li 和section 的类
+    clearClass() {
+            for (var i = 0; i < this.lis.length; i++) {//这里写this是可以的，因为clearClass()是that调用的 也就是当前实例对象
+                this.lis[i].className = '';
+                this.sections[i].className = '';
+            }
+        }           
+        // 2. 添加功能
+    addTab() {
+         that.clearClass();
+            // (1) 创建li元素和section元素 
+            var random = Math.random();
+            var li = '<li class="liactive"><span>新选项卡</span><span class="iconfont icon-guanbi"></span></li>';
+            var section = '<section class="conactive">测试 ' + random + '</section>';
+            // (2) 把这两个元素追加到对应的父元素里面
+            that.ul.insertAdjacentHTML('beforeend', li);
+            that.fsection.insertAdjacentHTML('beforeend', section);
+            that.init();    
+    }
+        // 3. 删除功能
+    removeTab(e) {
+            e.stopPropagation(); // 阻止冒泡 防止触发li 的切换点击事件
+            var index = this.parentNode.index;
+            console.log(index);
+            // 根据索引号删除对应的li 和section   remove()方法可以直接删除指定的元素
+            that.lis[index].remove();
+            that.sections[index].remove();
+            that.init();
+            // 当我们删除的不是选中状态的li 的时候,原来的选中状态li保持不变
+            if (document.querySelector('.liactive')) return;
+            // 当我们删除了选中状态的这个li 的时候, 让它的前一个li 处于选定状态
+            index--;
+            // 手动调用我们的点击事件  不需要鼠标触发  如果that.lis[index]不存在，则不执行后面的代码           
+            that.lis[index] && that.lis[index].click();
+        }
+        // 4. 修改功能
+    editTab() { };
+        
+
+}
+
+面向对象版 tab 栏切换 编辑功能
+双击选项卡li或者 section里面的文字,可以实现修改功能
+双击事件是:  ondblclick
+如果双击文字,会默认选定文字,此时需要双击禁止选中文字
+window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+核心思路:  双击文字的时候, 在 里面生成一个文本框, 当失去焦点或者按下回车然后把文本框输入的值给原先元素即可.
+var that;
+class Tab {
+    constructor(id) {
+        // 获取元素
+        that = this;
+        this.main = document.querySelector(id);
+        this.add = this.main.querySelector('.tabadd');
+        // li的父元素
+        this.ul = this.main.querySelector('.fisrstnav ul:first-child');
+        // section 父元素
+        this.fsection = this.main.querySelector('.tabscon');
+        this.init();
+    }
+    init() {
+            this.updateNode();
+            // init 初始化操作让相关的元素绑定事件
+            this.add.onclick = this.addTab;
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].index = i;
+                this.lis[i].onclick = this.toggleTab;
+                this.remove[i].onclick = this.removeTab;
+                this.spans[i].ondblclick = this.editTab;
+                this.sections[i].ondblclick = this.editTab;
+
+            }
+        }
+        // 因为我们动态添加元素 需要从新获取对应的元素
+    updateNode() {
+            this.lis = this.main.querySelectorAll('li');
+            this.sections = this.main.querySelectorAll('section');
+            this.remove = this.main.querySelectorAll('.icon-guanbi');
+            this.spans = this.main.querySelectorAll('.fisrstnav li span:first-child');
+        }
+        // 1. 切换功能
+    toggleTab() {
+            // console.log(this.index);
+            that.clearClass();
+            this.className = 'liactive';
+            that.sections[this.index].className = 'conactive';
+        }
+        // 清除所有li 和section 的类
+    clearClass() {
+            for (var i = 0; i < this.lis.length; i++) {
+                this.lis[i].className = '';
+                this.sections[i].className = '';
+            }
+        }
+        // 2. 添加功能
+    addTab() {
+            that.clearClass();
+            // (1) 创建li元素和section元素 
+            var random = Math.random();
+            var li = '<li class="liactive"><span>新选项卡</span><span class="iconfont icon-guanbi"></span></li>';
+            var section = '<section class="conactive">测试 ' + random + '</section>';
+            // (2) 把这两个元素追加到对应的父元素里面
+            that.ul.insertAdjacentHTML('beforeend', li);
+            that.fsection.insertAdjacentHTML('beforeend', section);
+            that.init();
+        }
+        // 3. 删除功能
+    removeTab(e) {
+            e.stopPropagation(); // 阻止冒泡 防止触发li 的切换点击事件
+            var index = this.parentNode.index;
+            console.log(index);
+            // 根据索引号删除对应的li 和section   remove()方法可以直接删除指定的元素
+            that.lis[index].remove();
+            that.sections[index].remove();
+            that.init();
+            // 当我们删除的不是选中状态的li 的时候,原来的选中状态li保持不变
+            if (document.querySelector('.liactive')) return;
+            // 当我们删除了选中状态的这个li 的时候, 让它的前一个li 处于选定状态
+            index--;
+            // 手动调用我们的点击事件  不需要鼠标触发
+            that.lis[index] && that.lis[index].click();
+        }
+        // 4. 修改功能
+    editTab() {
+        var str = this.innerHTML;
+        // 双击禁止选定文字
+        window.getSelection ? window.getSelection().removeAllRanges() : document.selection.empty();
+        // alert(11);
+        this.innerHTML = '<input type="text" />';
+        var input = this.children[0];
+        input.value = str;
+        input.select(); // 文本框里面的文字处于选定状态
+        // 当我们离开文本框就把文本框里面的值给span 
+        input.onblur = function() {
+            this.parentNode.innerHTML = this.value;
+        };
+        // 按下回车也可以把文本框里面的值给span
+        input.onkeyup = function(e) {
+            if (e.keyCode === 13) {
+                // 手动调用表单失去焦点事件  不需要鼠标离开操作
+                this.blur();
+            }
+        }
+    }
+
+}
+new Tab('#tab');
+2、构造函数和原型
+2.1、概述
+在典型的 OOP 的语言中（如 Java），都存在类的概念，类就是对象的模板，对象就是类的实例，但在 ES6之前， JS 中并没用引入类的概念。
+ES6， 全称 ECMAScript 6.0 ，2015.06 发版。但是目前浏览器的 JavaScript 是 ES5 版本，大多数高版本的浏览器也支持 ES6，不过只实现了 ES6 的部分特性和功能。
+在 ES6之前 ，对象不是基于类创建的，而是用一种称为构建函数的特殊函数来定义对象和它们的特征。
+【以前】创建对象有三种方式：
+1、对象字面量
+2、new Object()
+3、自定义构造函数
+// 1. 利用 new Object() 创建对象
+var obj1 = new Object();
+
+// 2. 利用对象字面量创建对象
+var obj2 = {}；
+
+// 3.利用构造函数创建对象
+function Star(uname,age) {
+    this.uname = uname;
+    this.age = age;
+    this.sing = function() {
+        console.log('我会唱歌');
+    }
+}
+var ldh = new Star('刘德华',18);
+
+注意：
+构造函数用于创建某一类对象，其首字母要大写
+构造函数要和new一起使用才有意义
+2.2、构造函数
+· 构造函数是一种特殊的函数，主要用来初始化对象(为对象成员变量赋初始值)，它总与new一起使用
+· 我们可以把对象中的一些公共的属性和方法抽取出来，然后封装到这个函数里面
+new 在执行时会做四件事：
+1.在内存中创建一个新的空对象。
+2.让 this 指向这个新的对象。
+3.执行构造函数里面的代码，给这个新对象添加属性和方法。
+4.返回这个新对象（所以构造函数里面不需要 return ）。
+2.2.1、静态成员和实例成员
+构造函数中的属性和方法我们称为成员。
+JavaScript 的构造函数中可以添加一些成员，可以在构造函数本身上添加，也可以在构造函数内部的this上添加。通过这两种方式添加的成员，就分别称为静态成员和实例成员。
+静态成员: 在构造函数本身上添加的成员为静态成员，只能由构造函数本身来访问
+实例成员: 在构造函数内部创建的对象成员称为实例成员，只能由实例化的对象来访问
+// 构造函数中的属性和方法我们称为成员，成员可以添加
+function Star(uname,age) {
+    this.uname = uname;
+    this.age = age;
+    this.sing = function() {
+        console.log('我会唱歌');
+    }
+}
+var ldh = new Star('刘德华',18);
+
+// 实例成员就是构造函数内部通过this添加的成员  uname age sing  就是实例成员
+// 实例成员只能通过实例化的对象来访问
+ldh.sing();
+console.log(Star.uname);// undefined     不可以通过构造函数来访问实例成员
+
+// 静态成员就是在构造函数本身上添加的成员 sex 就是静态成员
+// 静态成员只能通过构造函数来访问
+Star.sex = '男';
+console.log(Star.sex);
+console.log(ldh.sex); // undefined  不能通过对象来访问
+
+2.2.2、构造函数的问题
+构造函数方法很好用，但是存在浪费内存的问题。
+
+
+方法时复杂数据类型，需要另开空间来存放复杂数据类型。
+ function Star(uname, age) {
+            this.uname = uname;
+            this.age = age;
+            this.sing = function() {
+                console.log('我会唱歌');
+
+             }
+        }
+        
+        var ldh = new Star('刘德华', 18);
+        var zxy = new Star('张学友', 19);
+        console.log(ldh.sing === zxy.sing);//false，说明ldh.sing和zxy.sing不是一个函数，存放的不是一个地址
+我们希望所有的对象使用同一个函数，这样就比较节省内存
+2.3、构造函数原型 prototype
+构造函数通过原型分配的函数是所有对象所共享的,这样就解决了内存浪费问题
+JavaScript 规定，每一个构造函数都有一个prototype属性，指向另一个对象（或者说在每一个构造函数都有一个prototype对象（原型对象）），注意这个prototype就是一个对象，这个对象的所有属性和方法，都会被构造函数所拥有
+我们可以把那些不变的方法，直接定义在prototype 对象上，这样所有对象的实例就可以共享这些方法，对象都会到原型对象里面找方法，指向的是同一个地址
+<script>
+    // 1. 构造函数的问题. 
+    function Star(uname, age) {
+        this.uname = uname;
+        this.age = age;
+        // this.sing = function() {
+        //     console.log('我会唱歌');
+
+        // }
+    }
+    var ldh = new Star('刘德华', 18);
+    var zxy = new Star('张学友', 19);
+    console.dir(Star);
+        // 2. 一般情况下,我们的公共属性定义到构造函数里面, 公共的方法我们放到原型对象身上
+</script>
+可以看出Star构造函数里有一个prototype对象({}包裹的)
+
+
+ // 1. 构造函数的问题. 
+    function Star(uname, age) {
+        this.uname = uname;
+        this.age = age;
+        // this.sing = function() {
+        //     console.log('我会唱歌');
+
+        // }
+    }
+    Star.prototype.sing = function () {
+        console.log('我会唱歌');
+    }
+    var ldh = new Star('刘德华', 18);
+    var zxy = new Star('张学友', 19);
+    // console.log(ldh.sing === zxy.sing);
+    // console.dir(Star);
+    ldh.sing();//我会唱歌
+    zxy.sing();//我会唱歌
+        // 2. 一般情况下,我们的公共属性定义到构造函数里面, 公共的方法我们放到原型对象身上
+一般情况下,我们的公共属性定义到构造函数里面, 公共的方法我们放到原型对象身上
+问答：原型是什么？
+一个对象，我们也称为 prototype 为原型对象
+问答：原型的作用是什么？
+共享方法
+2.4、对象原型 __ proto __
+提问：sing（）是定义给了Star这个方法的prototype对象，为什么ldh这个对象可以使用这个方法，ldh对象上也没有这个方法呀？
+对象都会有一个属性 __proto__ 指向构造函数的prototype原型对象，之所以我们对象可以使用构造函数prototype 原型对象的属性和方法，就是因为对象有_proto_原型的存在。
+_proto_对象原型和原型对象 prototype 是等价的
+_proto_对象原型的意义就在于为对象的查找机制提供一个方向，或者说一条路线，但是它是一个非标准属性，因此实际开发中，不可以使用这个属性，它只是内部指向原型对象 prototype
+
+Star.prototype 和 ldh._proto_ 指向相同
+<body>
+    <script>
+        function Star(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+        Star.prototype.sing = function() {
+            console.log('我会唱歌');
+        }
+        var ldh = new Star('刘德华', 18);
+        var zxy = new Star('张学友', 19);
+        ldh.sing();
+        console.log(ldh); 
+		// 对象身上系统自己添加一个 __proto__ 指向我们构造函数的原型对象 prototype
+        console.log(ldh.__proto__ === Star.prototype);
+        // 方法的查找规则: 首先先看ldh 对象身上是否有 sing 方法,如果有就执行这个对象上的sing
+        // 如果没有sing 这个方法,因为有 __proto__ 的存在,就去构造函数原型对象prototype身上去查找sing这个方法
+    </script>
+</body>
+
+
+
+2.5、constructor 构造函数
+ 对象原型(__ proto __) 和构造函数(prototype)原型对象 里面都有一个属性 constructor 属性， constructor 我们称为构造函数，因为它指回构造函数本身。
+ constructor主要用于记录该对象引用于哪个构造函数（即对象是由哪个构造函数创建出来的），它可以让原型对象重新指向原来的构造函数 
+ 一般情况下，对象的方法都在构造函数(prototype)的原型对象中设置 
+如果有多个对象的方法，我们可以给原型对象prototype采取对象形式赋值，但是这样会覆盖构造函数原型对象原来的内容，这样修改后的原型对constructor就不再指向当前构造函数了。此时，我们可以在修改后的原型对象中，添加一个constructor指向原来的构造函数
+function Star(uname, age) {
+        this.uname = uname;
+        this.age = age;
+    }
+    Star.prototype.sing = function () {
+        console.log('我会唱歌');
+    };
+    var ldh = new Star('刘德华', 18);
+    var zxy = new Star('张学友', 19);
+    console.log(Star.prototype);
+    console.log(ldh.__proto__); 
+    console.log(Star.prototype.constructor);
+    console.log(ldh.__proto__.constructor);
+
+
+
+
+function Star(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+        // 很多情况下,我们需要手动的利用constructor 这个属性指回 原来的构造函数
+        // Star.prototype.sing = function() {
+        //     console.log('我会唱歌');
+        // };
+        // Star.prototype.movie = function() {
+        //     console.log('我会演电影');
+        // }
+        //上面是给Star.prototype添加sing和movie属性，而下面这个是直接给Star.prototype赋值，直接覆盖了
+        Star.prototype = {
+            // 如果我们修改了原来的原型对象,给原型对象赋值的是一个对象,则必须手动的利用constructor指回原来的构造函数
+            constructor: Star,
+            sing: function() {
+                console.log('我会唱歌');
+            },
+            movie: function() {
+                console.log('我会演电影');
+            }
+        }
+        var ldh = new Star('刘德华', 18);
+        var zxy = new Star('张学友', 19);
+        console.log(Star.prototype);
+        console.log(ldh.__proto__);
+        console.log(Star.prototype.constructor);
+        console.log(ldh.__proto__.constructor);
+若没有 constructor: Star,则Star.prototype.constructor和ldh.__proto__.constructor无法输出构造函数，因为Star.prototype和ldh.__proto__里已经没有constructor属性了
+
+加上constructor: Star：
+
+2.6、构造函数、实例、原型对象三者关系
+
+
+每一个构造函数里都会有一个原型对象protoytpe，通过Star的prototype属性指向这个原型对象的，
+原型对象里也有一个属性constructor，它又指回了构造函数
+通过构造函数还可以创建一个实例对象，实例对象里也有一个对象原型__proto__，指向原型对象prototype
+实例对象的对象原型__proto__指向原型对象prototype，原型对象prototype里有一个constructor属性再指回构造函数，其实实例对象的__proto__.constructor是通过原型对象prototype指回构造函数的
+2.7、原型链查找规则
+Star原型对象也是对象，也有_proto_属性
+<script>
+        function Star(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+        Star.prototype.sing = function() {
+            console.log('我会唱歌');
+        }
+        var ldh = new Star('刘德华', 18);
+        // 1. 只要是对象就有__proto__ 原型, 指向原型对象
+        console.log(Star.prototype);
+        console.log(Star.prototype.__proto__ === Object.prototype);//true
+        // 2.我们Star原型对象里面的__proto__原型指向的是 Object.prototype
+        console.log(Object.prototype.__proto__);
+        // 3. 我们Object.prototype原型对象里面的__proto__原型  指向为 null到了最顶层
+
+
+原型链查找规则
+1.当访问一个对象的属性(包括方法)时，首先查找这个对象自身有没有该属性
+2.如果没有就查找它的原型(也就是_proto_指向的prototype原型对象)
+3.如果还没有就查找原型对象的原型(Object的原型对象)
+4.依次类推一直找到Object为止(null)
+5.__ proto __对象原型的意义就在于为对象成员查找机制提供一个方向，或者说一条路线。（符合就近原则）
+function Star(uname, age) {
+        this.uname = uname;
+        this.age = age;
+    }
+    Star.prototype.sing = function () {
+        console.log('我会唱歌');
+
+    }
+    // Star.prototype.sex = '女';
+       Object.prototype.sex = '男';
+    var ldh = new Star('刘德华', 18);
+    ldh.sex = '男';
+    console.log(ldh.sex);//男，若Object.prototype.sex = '男';也被注释起来，则输出undefined，因为查找到null了
+就近原则：
+function Star(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+        Star.prototype.sing = function() {
+            console.log('我会唱歌');
+
+        }
+        Star.prototype.sex = '女';
+        // Object.prototype.sex = '男';
+        var ldh = new Star('刘德华', 18);
+        ldh.sex = '男';
+        console.log(ldh.sex);//男，就近原则输出ldh.sex = '男'
+
+ function Star(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+        Star.prototype.sing = function() {
+            console.log('我会唱歌');
+
+        }
+        Star.prototype.sex = '女';
+        // Object.prototype.sex = '男';
+        var ldh = new Star('刘德华', 18);
+        ldh.sex = '男';
+        console.log(ldh.sex);
+        console.log(Object.prototype);
+        console.log(ldh);
+        console.log(Star.prototype);
+        console.log(ldh.toString());//只有Object有toString()这个方法，但ldh这个对象仍可以通过原型链调用
+2.8、原型对象this指向
+this指向属性、函数（方法）调用者
+构造函数中的 this指向我们的实例对象（也就是属性调用者）
+原型对象里面放的是方法，这个方法里面的this指向的是这个方法的调用者，也就是这个实例对象
+<body>
+    <script>
+        function Star(uname, age) {
+            this.uname = uname;
+            this.age = age;
+        }
+        var that;
+        Star.prototype.sing = function() {
+            console.log('我会唱歌');
+            that = this;
+        }
+        var ldh = new Star('刘德华', 18);
+        // 1. 在构造函数中,里面this指向的是对象实例 ldh
+        ldh.sing();
+        console.log(that === ldh);//true
+
+        // 2.原型对象函数里面的this 指向的是 实例对象 ldh
+    </script>
+</body>
+
+2.9、扩展内置对象
+可以通过原型对象，对原来的内置对象进行扩展自定义的方法（例如Array这个内置对象，它本身在prototype存有一些方法，比如添加或者删除数组中某些元素）
+比如给数组增加自定义求偶数和的功能
+console.log(Array.prototype);
+
+
+<body>
+    <script>
+        // 原型对象的应用 扩展内置对象方法
+
+        Array.prototype.sum = function() {
+            var sum = 0;
+            for (var i = 0; i < this.length; i++) {
+                sum += this[i];
+            }
+            return sum;
+        };
+        // Array.prototype = {
+        //     sum: function() {
+        //         var sum = 0;
+        //         for (var i = 0; i < this.length; i++) {
+        //             sum += this[i];
+        //         }
+        //         return sum;
+        //     }
+
+        // }这种不可以，Array.prototype的原有属性全部会被覆盖，原来的功能都没有了，console.log(arr.sum());会报错
+        var arr = [1, 2, 3];
+        console.log(arr.sum());//6
+        console.log(Array.prototype);//这时Array.prototype就有了sum方法
+        var arr1 = new Array(11, 22, 33);//另一种数组声明方法
+        console.log(arr1.sum());//66
+    </script>
+</body>
+
+注意：
+数组和字符串内置对象不能给原型对象覆盖操作Array.prototype = {}（会报错！），只能是Array.prototype.xxx = function(){}的方式
+3、继承
+ES6 之前并没有给我们提供extends继承
+我们可以通过构造函数（继承父类型的属性）+原型对象（继承父类型的方法）模拟实现继承，被称为组合继承。
+3.1、call()
+调用这个函数，并且修改函数运行时的 this 指向
+fun.call(thisArg,arg1,arg2,......)//fun是某个函数
+thisArg：当前调用函数 this 的指向对象
+arg1,arg2： 传递的其他参数
+<body>
+    <script>
+        // call 方法
+        function fn(x, y) {
+            console.log('我希望我的希望有希望');
+            console.log(this);		// Object{...}
+            console.log(x + y);		// 3
+        }
+
+        var o = {
+            name: 'andy'
+        };
+        // fn();//this指向被调用者window
+        // 1. call() 可以调用函数
+        // fn.call();
+        // 2. call() 可以改变这个函数的this指向 此时这个函数的this 就指向了o这个对象
+        fn.call(o, 1, 2);
+    </script>
+</body>
+
+3.2、借用构造函数继承父类型属性
+ES6 之前并没有给我们提供extends继承
+我们可以通过构造函数（继承父类型的属性）+原型对象（继承父类型的方法）模拟实现继承，被称为组合继承。
+
+核心原理: 通过 call() 把父类型的 this 指向子类型的 this，这样就可以实现子类型继承父类型的属性
+<body>
+    <script>
+        // 借用父构造函数继承属性
+        // 1. 父构造函数
+        function Father(uname, age) {
+            // this 指向父构造函数的对象实例
+            this.uname = uname;
+            this.age = age;
+        }
+        // 2 .子构造函数 
+        function Son(uname, age, score) {
+            // this 指向子构造函数的对象实例
+            Father.call(this, uname, age);
+            this.score = score;
+        }
+        var son = new Son('刘德华', 18, 100);
+        console.log(son);
+    </script>
+</body>
+
+3.3、借用原型对象继承父类型方法
+ES6 之前并没有给我们提供extends继承
+我们可以通过构造函数（继承父类型的属性）+原型对象（继承父类型的方法）模拟实现继承，被称为组合继承。
+
+一般情况下，对象的方法都在构造函数的原型对象中设置，通过构造函数无法继承父类方法
+核心原理：
+1.将子类所共享的方法提取出来，让子类的 prototype 原型对象 = new 父类()
+2.本质： 子类原型对象等于是实例化父类，因为父类实例化之后另外开辟空间，就不会影响原来父类原型对象
+3.将子类的constructor重新指向子类的构造函数
+<body>
+    <script>
+        // 借用父构造函数继承属性
+        // 1. 父构造函数
+        function Father(uname, age) {
+            // this 指向父构造函数的对象实例
+            this.uname = uname;
+            this.age = age;
+        }
+        Father.prototype.money = function() {
+            console.log(100000);
+
+        };
+        // 2 .子构造函数 
+        function Son(uname, age, score) {
+            // this 指向子构造函数的对象实例
+            Father.call(this, uname, age);
+            this.score = score;
+        }
+        // Son.prototype = Father.prototype;  这样直接赋值会有问题,如果修改了子原型对象,父原型对象也会跟着一起变化，因为son原型对象
+        //从father原型对象得到的是地址，son原型对象变化，相当于在地址内做了修改，父原型对象也会改变
+        Son.prototype = new Father();// Son.prototype指向Father原型对象跟Father原型对象不是一个地址
+        // 如果利用对象的形式(new Father()是一个实例对象，也是一个对象是{}的形式)修改了原型对象,就把Son.prototype覆盖了
+        //别忘了利用constructor 指回原来的构造函数
+        Son.prototype.constructor = Son;
+        // 这个是子构造函数专门的方法
+        Son.prototype.exam = function() {
+            console.log('孩子要考试');
+
+        }
+        var son = new Son('刘德华', 18, 100);
+        console.log(son);
+        console.log(Father.prototype);
+        console.log(Son.prototype.constructor);
+    </script>
+</body>
+
+用Father 构造函数构造实例化对象Son.prototype，Son构造函数构造的实例化对象想要调用money方法，先去Son构造函数里找，里面没有就去Son原型对象里找，还没有去Father 构造函数的原型对象里找，找到了money然后调用
+
+3.3 类的本质
+class 本质还是 function
+类的所有方法都定义在类的 prototype属性上
+类创建的实例，里面也有_proto_指向类的prototype原型对象
+所以 ES6 的类它的绝大部分功能，ES5都可以做到，新的class写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已。
+所以 ES6 的类其实就是语法糖
+语法糖：语法糖就是一种便捷写法，简单理解
+ // ES6 之前通过 构造函数+ 原型实现面向对象 编程
+        // 构造函数的特点：       
+        // (1) 构造函数有原型对象prototype 
+        // (2) 构造函数原型对象prototype 里面有constructor 指向构造函数本身
+        // (3) 构造函数可以通过原型对象添加方法
+        // (4) 构造函数创建的实例对象有__proto__ 原型指向 构造函数的原型对象
+        // ES6 通过 类 实现面向对象编程 
+        class Star {
+
+        }
+        console.log(typeof Star);//function
+        // 1. 类的本质其实还是一个函数 我们也可以简单的认为 类就是 构造函数的另外一种写法
+        // (1) 类有原型对象prototype 
+        console.log(Star.prototype);
+        // (2) 类原型对象prototype 里面有constructor 指向类本身
+        console.log(Star.prototype.constructor);
+        // (3)类可以通过原型对象添加方法
+        Star.prototype.sing = function() {
+            console.log('冰雨');
+
+        }
+        var ldh = new Star();
+        console.dir(ldh);
+        // (4) 类创建的实例对象有__proto__ 原型指向 类的原型对象
+        console.log(ldh.__proto__ === Star.prototype);//true
+        i = i + 1;
+        i++；//语法糖
+
+4、ES5新增方法
+ES5 给我们新增了一些方法，可以很方便的操作数组或者字符串
+数组方法
+字符串方法
+对象方法
+4.1、数组方法
+迭代(遍历)方法：foreach() ，map()，filter()，some() ，every() ;
+4.1.1、forEach()（加强版的for循环）
+array.forEach(function(currentValue,index,arr))
+迭代(遍历)方法：foreach() ，map()，filter()，some() ，every() ;
+currentValue : 数组当前项的值
+index: 数组当前项的索引
+arr: 数组对象本身
+<body>
+    <script>
+        // forEach 迭代(遍历) 数组
+        var arr = [1, 2, 3];
+        var sum = 0;
+        arr.forEach(function(value, index, array) {
+            console.log('每个数组元素' + value);
+            console.log('每个数组元素的索引号' + index);
+            console.log('数组本身' + array);
+            sum += value;
+        })
+        console.log(sum);
+    </script>
+</body>
+
+
+4.1.2、filter()筛选数组
+array.filter(function(currentValue,index,arr))
+迭代(遍历)方法：foreach() ，map()，filter()，some() ，every() ;
+filter()方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素，主要用于筛选数组
+注意它直接返回一个新数组
+currentValue : 数组当前项的值
+index: 数组当前项的索引
+arr: 数组对象本身
+<body>
+    <script>
+        // filter 筛选数组
+        var arr = [12, 66, 4, 88, 3, 7];
+        var newArr = arr.filter(function(value, index) {
+            // return value >= 20;
+            return value % 2 === 0;(为true的可以返回到新数组)
+        });
+        console.log(newArr);//[12,66,4,88]
+    </script>
+</body>
+
+4.1.3、some()
+array.some(function(currentValue,index,arr))
+迭代(遍历)方法：foreach() ，map()，filter()，some() ，every() ;
+currentValue : 数组当前项的值
+index: 数组当前项的索引
+arr: 数组对象本身
+some()方法用于检测数组中的元素是否满足指定条件（查找数组中是否有满足条件的元素）
+注意它返回的是布尔值，如果查找到这个元素，就返回true，如果查找不到就返回false
+如果找到第一个满足条件的元素（即return true），则终止循环，不再继续查找
+看案例查询商品案例，some（）的本质还是把数组元素遍历，只是return的是布尔值
+<body>
+    <script>
+        // some 查找数组中是否有满足条件的元素 
+        var arr1 = ['red', 'pink', 'blue'];
+        var flag1 = arr1.some(function(value) {
+            return value == 'pink';
+        });
+        console.log(flag1);//true
+        // 1. filter 也是查找满足条件的元素 返回的是一个数组 而且是把所有满足条件的元素返回回来
+        // 2. some 也是查找满足条件的元素是否存在  返回的是一个布尔值 如果查找到第一个满足条件的元素就终止循环
+    </script>
+</body>
+案例：查询商品案例
+
+
+
+<body>
+    <div class="search">
+        按照价格查询: <input type="text" class="start"> - <input type="text" class="end"> <button class="search-price">搜索</button> 按照商品名称查询: <input type="text" class="product"> <button class="search-pro">查询</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>id</th>
+                <th>产品名称</th>
+                <th>价格</th>
+            </tr>
+        </thead>
+        <tbody>
+
+
+        </tbody>
+    </table>
+    <script>
+        // 利用新增数组方法操作数据
+        var data = [{
+            id: 1,
+            pname: '小米',
+            price: 3999
+        }, {
+            id: 2,
+            pname: 'oppo',
+            price: 999
+        }, {
+            id: 3,
+            pname: '荣耀',
+            price: 1299
+        }, {
+            id: 4,
+            pname: '华为',
+            price: 1999
+        }, ];
+        // 1. 获取相应的元素
+        var tbody = document.querySelector('tbody');
+        var search_price = document.querySelector('.search-price');
+        var start = document.querySelector('.start');
+        var end = document.querySelector('.end');
+        var product = document.querySelector('.product');
+        var search_pro = document.querySelector('.search-pro');
+        setDate(data);
+        // 2. 把数据渲染到页面中
+        function setDate(mydata) {
+            // 先清空原来tbody 里面的数据
+            tbody.innerHTML = '';
+            mydata.forEach(function(value) {
+                // console.log(value);
+                var tr = document.createElement('tr');
+                tr.innerHTML = '<td>' + value.id + '</td><td>' + value.pname + '</td><td>' + value.price + '</td>';
+                tbody.appendChild(tr);
+            });
+        }
+
+        // 3. 根据价格查询商品
+        // 当我们点击了按钮,就可以根据我们的商品价格去筛选数组里面的对象
+        search_price.addEventListener('click', function() {
+            // alert(11);
+            var newDate = data.filter(function(value) {
+                return value.price >= start.value && value.price <= end.value;
+            });
+            console.log(newDate);
+            // 把筛选完之后的对象渲染到页面中
+            setDate(newDate);
+        });
+        // 4. 根据商品名称查找商品
+        // 如果查询数组中唯一的元素, 用some方法更合适,因为它找到这个元素(即return true),就不在进行循环,效率更高
+        search_pro.addEventListener('click', function() {
+            var arr = [];
+            data.some(function(value) {
+                if (value.pname === product.value) {
+                    // console.log(value);
+                    arr.push(value);
+                    return true; // return 后面必须写true  
+                }
+            });
+            // 把拿到的数据渲染到页面中
+            setDate(arr);
+        })
+    </script>
+</body>
+some和forEach的区别
+<script>
+        var arr = ['red', 'green', 'blue', 'pink'];
+        // 1. forEach迭代 遍历
+        // arr.forEach(function(value) {
+        //     if (value == 'green') {
+        //         console.log('找到了该元素');
+        //         return true; // 在forEach 里面 return 不会终止迭代
+        //     }
+        //     console.log(11);//会输出三次11，只有遍历到green时不输出
+
+        // })
+        // 如果查询数组中唯一的元素, 用some方法更合适,
+        arr.some(function(value) {
+            if (value == 'green') {
+                console.log('找到了该元素');
+                return true; //  在some 里面 遇到 return true 就是终止遍历 迭代效率更高
+            }
+            console.log(11);
+
+        });
+        // arr.filter(function(value) {
+        //     if (value == 'green') {
+        //         console.log('找到了该元素');
+        //         return true; //  // filter 里面 return 不会终止迭代
+        //     }
+        //     console.log(11);//会输出三次11，只有遍历到green时不输出
+
+        // });
+    </script>
+4.2、字符串方法
+trim()方法会从一个字符串的两端删除空白字符
+str.trim();
+trim()方法并不影响原字符串本身，它返回的是一个新的字符串
+<body>
+    <input type="text"> <button>点击</button>
+    <div></div>
+    <script>
+        // trim 方法去除字符串两侧空格
+        var str = '   an  dy   ';
+        console.log(str);
+        var str1 = str.trim();
+        console.log(str1);//an  dy
+        var input = document.querySelector('input');
+        var btn = document.querySelector('button');
+        var div = document.querySelector('div');
+        btn.onclick = function() {
+            //防止表单里只输入了几个空格就让div显示了
+            var str = input.value.trim();
+            if (str === '') {
+                alert('请输入内容');
+            } else {
+                console.log(str);
+                console.log(str.length);
+                div.innerHTML = str;
+            }
+        }
+    </script>
+</body>
+4.3、对象方法
+4.3.1、Object.keys()
+Object.keys()用于获取对象自身所有的属性
+效果类似for...in
+返回一个由属性名组成的数组
+<body>
+    <script>
+        // 用于获取对象自身所有的属性
+        var obj = {
+            id: 1,
+            pname: '小米',
+            price: 1999,
+            num: 2000
+        };
+        var arr = Object.keys(obj);
+        console.log(arr);
+        arr.forEach(function(value) {
+            console.log(value);
+            // id
+            // pname
+            // price
+            // num
+        })
+    </script>
+</body>
+4.3.2、Object.defineProperty()
+Object.defineProperty()定义对象中新属性或修改原有的属性(了解)
+Object.defineProperty(obj,prop,descriptor)
+obj : 目标对象
+prop : 需定义或修改的属性的名字
+descriptor : 目标属性所拥有的特性
+<body>
+    <script>
+        // Object.defineProperty() 定义新属性或修改原有的属性
+        var obj = {
+            id: 1,
+            pname: '小米',
+            price: 1999
+        };
+        // 1. 以前的对象添加和修改属性的方式
+        // obj.num = 1000;
+        // obj.price = 99;
+        // console.log(obj);
+        // 2. Object.defineProperty() 定义新属性或修改原有的属性
+        Object.defineProperty(obj, 'num', {
+            value: 1000,
+            enumerable: true
+        });
+        console.log(obj);
+        Object.defineProperty(obj, 'price', {
+            value: 9.9
+        });
+        console.log(obj);
+        Object.defineProperty(obj, 'id', {
+            // 如果值为false 不允许修改这个属性值 默认值也是false
+            writable: false,
+        });
+        obj.id = 2;
+        console.log(obj);
+        Object.defineProperty(obj, 'address', {
+            value: '中国山东蓝翔技校xx单元',
+            // 如果只为false 不允许修改这个属性值 默认值也是false
+            writable: false,
+            // enumerable 如果值为false 则不允许遍历, 默认的值是 false
+            enumerable: false,
+            // configurable 如果为false 则不允许删除这个属性 不允许在修改第三个参数里面的特性 默认为false
+            configurable: false
+        });
+        console.log(obj);
+        console.log(Object.keys(obj));
+        delete obj.address;
+        console.log(obj);
+        delete obj.pname;
+        console.log(obj);
+        Object.defineProperty(obj, 'address', {
+            value: '中国山东蓝翔技校xx单元',
+            // 如果值为false 不允许修改这个属性值 默认值也是false
+            writable: true,
+            // enumerable 如果值为false 则不允许遍历, 默认的值是 false
+            enumerable: true,
+            // configurable 如果为false 则不允许删除这个属性 默认为false
+            configurable: true
+        });
+        console.log(obj.address);
+    </script>
+</body>
+
+第三个参数 descriptor 说明：以对象形式{ }书写
+value：设置属性的值，默认为undefined
+writeable: 值是否可以重写 true | false 默认为false
+enumerable: 目标属性是否可以被枚举 true | false 默认为false
+configurable: 目标属性是否可以被删除或是否可以再次修改特性 true | false 默认为false
