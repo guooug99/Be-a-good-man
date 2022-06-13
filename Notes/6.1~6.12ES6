@@ -1,0 +1,905 @@
+11、Promise（面试重点）
+文档：https://es6.ruanyifeng.com/#docs/promise
+概述：
+Promise 是 ES6 引入的异步编程的新解决方案（解决回调地狱问题）。语法上 Promise 是一个构造函数，用来封装异步操作
+并可以获取其成功或失败的结果；
+1. Promise 构造函数: Promise (excutor) {}；
+2. Promise.prototype.then 方法；
+3. Promise.prototype.catch 方法；
+// 1.实例化 Promise 对象
+        // Promise 对象三种状态：初始化、成功、失败
+        const p = new Promise(function (resolve, reject) {
+            //2、执行定时器这个异步操作
+            setTimeout(function () {
+                // 成功
+                let data = "数据库中的数据";
+                // 3、得到数据之后，可以通过resolve, reject改变Promise 对象的状态，
+                // 3、调用resolve方法，这个Promise 对象的状态就会变成成功
+                resolve(data);
+            }, 1000);
+        });
+        // 成功
+        // 4、Promise 对象的状态为成功后，可以调用 Promise 对象的then方法，两个参数为函数,成功的形参一般为value，失败的形参一般为reason
+        p.then(function (value) { // 当Promise 对象的状态为成功时，即异步操作代码里调用了调用resolve时，then方法就会执行
+            console.log(value);// p.then它的第一个回调函数代码，输出value值一秒钟后得到数据库中的数据
+        }, function (reason) { // 失败
+            console.log(reason);
+        });
+
+
+
+// 1.实例化 Promise 对象
+        // Promise 对象三种状态：初始化、成功、失败
+        const p = new Promise(function (resolve, reject) {
+            //2、执行定时器这个异步操作
+            setTimeout(function () {
+                // // 成功
+                // let data = "数据库中的数据";
+                // // 3、得到数据之后，可以通过resolve, reject改变Promise 对象的状态，
+                // // 3、调用resolve方法，这个Promise 对象的状态就会变成成功
+                // resolve(data);
+                //3、如果调用读取数据失败
+                let err = "数据读取失败了！";
+                reject(err);// 3、调用reject方法，这个Promise 对象的状态就会变成失败
+            }, 1000);
+        });
+        // 成功
+        // 4、Promise 对象的状态为成功/失败后，可以调用 Promise 对象的then方法，两个参数为函数,成功的形参一般为value，失败的形参一般为reason
+        p.then(function (value) { // 当Promise 对象的状态为成功时，即异步操作代码里调用了调用resolve时，then方法就会执行
+            console.log(value);//它的第一个回调函数代码，输出value值一秒钟后得到数据库中的数据
+        }, function (reason) { // 4、当Promise 对象的状态为失败时，即异步操作代码里调用了调用reject时，then方法就会执行
+            console.log(reason);//4、 p.then它的第二个回调函数代码，输出reject值一秒钟后得到数据读取失败
+            console.error(reason);//4、 p.then它的第二个回调函数代码，输出reject值一秒钟后得到数据读取失败
+        });
+
+
+Promise封装读取文件：
+一般写法：
+// 1、引入 fs 模块
+        const fs = require("fs");
+        // 2、调用方法，读取文件
+        fs.readFile("resources/text.txt", (err, data) => {
+            // 如果失败则抛出错误
+            if (err) throw err;
+            // 如果没有出错，则输出内容
+            console.log(data.toString());
+        });
+
+Promise封装：
+// 1、引入 fs 模块
+        const fs = require("fs");
+        // 2、调用方法，读取文件
+        // fs.readFile("resources/text.txt",(err,data)=>{
+        // // 如果失败则抛出错误
+        // if(err) throw err;
+        // // 如果没有出错，则输出内容
+        // console.log(data.toString());
+        // });
+        // 3、使用Promise封装
+        const p = new Promise(function (resolve, data) {
+            fs.readFile("resources/text.txt", (err, data) => {
+                //不用加else，因为promise状态只会改变一次，一旦失败就不会成功了，成功则反之
+                // 判断如果失败
+                if (err) reject(err);
+                // 如果成功
+                resolve(data);
+            });
+        });
+        p.then(function (value) {
+            console.log(value.toString());//直接输出value是一个buffer，要toString()为字符
+        }, function (reason) {
+            console.log(reason); // 读取失败
+        })
+为什么不用一般方法，因为当多个异步任务时，要不断缩进。
+
+Promise封装Ajax请求：
+原生请求：
+// 请求地址：https://api.apiopen.top/getJoke
+        // 原生请求
+        // 1、创建对象
+        const xhr = new XMLHttpRequest();
+        // 2、初始化
+        xhr.open("GET", "https://api.apiopen.top/getJoke");
+        // 3、发送
+        xhr.send();
+        // 4、绑定事件，处理响应结果
+        xhr.onreadystatechange = function () {
+            // 判断状态
+            if (xhr.readyState == 4) {
+                // 判断响应状态码 200-299
+                if (xhr.status >= 200 && xhr.status <= 299) {
+                    // 成功
+                    console.log(xhr.response);
+                } else {
+                    // 失败
+                    console.error(xhr.status);
+                }
+            }
+        }
+运行结果：
+
+Promise封装Ajax请求：
+// 请求地址：https://api.apiopen.top/getJoke
+        const p = new Promise(function (resolve, reason) {
+            // 原生请求
+            // 1、创建对象
+            const xhr = new XMLHttpRequest();
+            // 2、初始化
+            xhr.open("GET", "https://api.apiopen.top/getJoke");
+            // 3、发送
+            xhr.send();
+            // 4、绑定事件，处理响应结果
+            xhr.onreadystatechange = function () {
+                // 判断状态
+                if (xhr.readyState == 4) {
+                    // 判断响应状态码 200-299
+                    if (xhr.status >= 200 && xhr.status <= 299) {
+                        // 成功
+                        resolve(xhr.response);
+                    } else {
+                        // 失败
+                        reason(xhr.status);
+                    }
+                }
+            }
+        });
+
+Promise.prototype.then：（then方法）
+1、如果回调函数中（即then方法的两个参数函数）返回的结果是 非promise 类型的数据，
+注意不是then方法返回的结果，then方法的返回结果是promise对象
+// 创建 Promise 对象
+        const p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("用户数据");
+            }, 1000);
+        });
+         // 调用then方法，then方法的返回结果是promise对象
+        // 对象的状态有回调函数的结果决定;
+        const result = p.then(value => {
+            console.log(value);
+            // 1、如果回调函数中返回的结果是 非promise 类型的数据，
+            // 状态为成功，返回值为对象的成功值resolved
+            // [[PromiseStatus]]:"resolved"//状态为成功！
+            // [[PromiseValue]]:123
+            return 123;
+            //如果没有return语句
+            // [[PromiseStatus]]:"resolved"//状态为成功！
+            // [[PromiseValue]]:undefined
+             }, reason => {
+            console.error(reason);
+        })
+         console.log(result);
+
+
+新版内resolved改成了fulfilled。
+PromiseValue改为了PromiseResult。
+2.如果回调函数中（即then方法的两个参数函数）返回的结果是 promise类型的数据
+// 创建 Promise 对象
+        const p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("用户数据");
+            }, 1000);
+        });
+        // 调用then方法，then方法的返回结果是promise对象
+        // 对象的状态有回调函数的结果决定;
+        const result = p.then(value => {
+            console.log(value);
+            // 2、如果...是promise类型的数据
+            // 此Promise对象的状态决定上面Promise对象p的状态
+            //即内部回调函数返回的状态决定then方法返回的Promise对象的状态，内部回调函数返回的值就是then方法返回的Promise对象的值
+            return new Promise((resolve, reject) => {
+                // resolve("ok"); // resolved
+                reject("ok"); // rejected
+            });
+        }, reason => {
+            console.error(reason);
+        })
+        console.log(result);
+
+
+3.如果回调函数中（即then方法的两个参数函数）返回的结果是抛出错误
+// 创建 Promise 对象
+        const p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("用户数据");
+            }, 1000);
+        });
+        // 调用then方法，then方法的返回结果是promise对象
+        // 对象的状态有回调函数的结果决定;
+        const result = p.then(value => {
+            console.log(value);
+            // 3、抛出错误
+            throw '失败啦!';
+            // 状态：rejected
+            // value：失败啦！
+        }, reason => {
+            console.error(reason);
+        })
+        console.log(result);
+
+then方法是可以链式调用的
+// 创建 Promise 对象
+        const p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve("用户数据");
+            }, 1000);
+        });
+        // 调用then方法，then方法的返回结果是promise对象，
+        // 对象的状态有回调函数的结果决定;
+        const result = p.then(value => {
+            console.log(value);
+            // 1、如果回调函数中返回的结果是 非promise 类型的数据，
+            // 状态为成功，返回值为对象的成功值resolved
+            // [[PromiseStatus]]:"resolved"
+            // [[PromiseValue]]:123
+            // return 123;
+            // 2、如果...是promise类型的数据
+            // 此Promise对象的状态决定上面Promise对象p的状态
+            //即内部回调函数返回的状态决定then方法返回的Promise对象的状态，内部回调函数返回的值就是then方法返回的Promise对象的值
+            // return new Promise((resolve,reject)=>{
+            // // resolve("ok"); // resolved
+            // reject("ok"); // rejected
+            // });
+            // 3、抛出错误
+            // throw new Error("失败啦！");
+            // 状态：rejected
+            // value：失败啦！
+        }, reason => {
+            console.error(reason);
+        })
+        // 链式调用,杜绝回调地狱问题
+        // then里面两个函数参数，可以只写一个
+        p.then(value => { }, reason => { }).then(value => { }, reason => { });
+        p.then(value => { }).then(value => { });
+        console.log(result);
+Promise实践练习：
+挨个读取三个文件内容，把三个文件内容合在一起进行输出
+原始“回调地狱”方式写法：
+// 1、引入 fs 模块
+        const fs = require("fs");
+        // 2、调用方法，读取文件
+        fs.readFile("resources/text.txt", (err, data1) => {
+            fs.readFile("resources/test1.txt", (err, data2) => {
+                fs.readFile("resources/test2.txt", (err, data3) => {
+                    let result = data1 + data2 + data3;
+                    console.log(result);
+                });
+            });
+        });
+
+
+Promise实现：
+// // 1、引入 fs 模块
+        // const fs = require("fs");
+        // // 2、调用方法，读取文件
+        // fs.readFile("resources/text.txt", (err, data1) => {
+        //     fs.readFile("resources/test1.txt", (err, data2) => {
+        //         fs.readFile("resources/test2.txt", (err, data3) => {
+        //             let result = data1 + data2 + data3;
+        //             console.log(result);
+        //         });
+        //     });
+        // });
+        // 3、使用Promise实现
+        const p = new Promise((resolve, reject) => {
+            fs.readFile("resources/text.txt", (err, data) => {
+                resolve(data);
+            });
+        });
+        p.then(value => {
+            return new Promise((resolve, reject) => {
+                fs.readFile("resources/test1.txt", (err, data) => {
+                    resolve([value, data]);
+                });
+            })
+        }).then(value => {
+            return new Promise((resolve, reject) => {
+                fs.readFile("resources/test2.txt", (err, data) => {
+                    // 存入数组
+                    value.push(data);
+                    resolve(value);
+                });
+            })
+        }).then(value => {
+            console.log(value.join("\r\n"));
+        })
+Promise对象catch方法：
+用来指定promise对象失败的一个回调
+代码示例及相关说明：
+// Promise对象catch方法
+        const p = new Promise((resolve, reject) => {
+            setTimeout(() => {
+                // 设置p对象的状态为失败，并设置失败的值
+                reject("失败啦~！");
+            }, 1000);
+        })
+        // p.then(value=>{
+        // },reason=>{
+        // console.error(reason);//输出：失败啦~！
+        // });
+        p.catch(reason => {
+            console.warn(reason);
+        });//算是一个语法糖
+
+
+还有很多有关promise的内容，尚硅谷xiaofei老师有详细讲promise内容，可以去尚硅谷官网去看
+12.Set集合
+ES6 提供了新的数据结构 Set（集合）。它类似于数组，但成员的值都是唯一的，集合实现了 iterator
+接口，所以可以使用『扩展运算符』和『for...of...』进行遍历，集合的属性和方法：
+1. size 返回集合的元素个数；
+2. add 增加一个新元素，返回当前集合；
+3. delete 删除元素，返回 boolean 值；
+4. has 检测集合中是否包含某个元素，返回 boolean 值；
+5. clear 清空集合，返回 undefined；
+<script>
+        // 声明一个Set
+        let s = new Set();
+        console.log(s, typeof s);
+        //new Set()可接受一个可迭代数据，一般是数组
+        let s1 = new Set(["大哥", "二哥", "三哥", "四哥", "三哥"]);
+        console.log(s1); // 自动去重
+        // 1. size 返回集合的元素个数；
+        console.log(s1.size);
+        // 2. add 增加一个新元素，返回当前集合；
+        s1.add("大姐");
+        console.log(s1);
+        // 3. delete 删除元素，返回 boolean 值；
+        let result = s1.delete("三哥");
+        console.log(result);
+        console.log(s1);
+        // 4. has 检测集合中是否包含某个元素，返回 boolean 值；
+        let r1 = s1.has("二姐");
+        console.log(r1);
+        // 5. clear 清空集合，返回 undefined；
+        let c1 = s1.clear();
+        console.log(s1);
+        console.log(c1);//undefined
+        
+        //Set集合实现了iterator接口，可以用for of遍历
+        let s1 = new Set(["大哥", "二哥", "三哥"]);
+        for(let v of s2){
+             console.log(v);
+        }//大哥 二哥 三哥
+        
+    </script>
+如果clear前面的代码没注释，最后输出的set都是Set（0）
+
+如果1~5单独输出，其余的都注释是
+
+Set集合实践：
+// Set集合实践
+        let arr = [1, 2, 3, 4, 5, 4, 3, 2, 1];
+        // 数组去重
+        let s1 = [...new Set(arr)];//用扩展运算符把set集合展开，然后用[]包裹变成数组
+        console.log(s1);
+        // 交集(记得去重)
+        let arr2 = [3, 4, 5, 6, 5, 4, 3];
+         let result = [...new Set(arr)].filter(item => {
+             let s2 = new Set(arr2);
+             if(s2.has(item)){
+                 return true;             
+             }else{
+                 return false;             
+             }         
+         });
+         //简化上面的代码
+        let result = [...new Set(arr)].filter(item => new
+            Set(arr2).has(item));
+        console.log(result);
+        // 并集(记得去重)
+        // ... 为扩展运算符，将数组转化为逗号分隔的序列
+        let union = [...new Set([...arr, ...arr2])];
+        console.log(union);
+        // 差集：比如集合1和集合2求差集，就是1里面有的，2里面没的
+        let result1 = [...new Set(arr)].filter(item => !(new
+            Set(arr2).has(item)));
+        console.log(result1);
+
+13、Map集合
+概述：
+ES6 提供了 Map 数据结构。它类似于对象，也是键值对的集合。但是“键”的范围不限于字符串，各种类
+型的值（包括对象）都可以当作键。Map 也实现了iterator 接口，所以可以使用『扩展运算符』和『for...of...』进行遍历；
+
+Map 的属性和方法：
+1. size 返回 Map 的元素个数；
+2. set 增加一个新元素，返回当前 Map；
+3. get 返回键名对象的键值；
+4. has 检测 Map 中是否包含某个元素，返回 boolean 值；
+5. clear 清空集合，返回 undefined；
+
+简单使用：
+代码实现：
+// Map集合
+        // 创建一个空 map
+        let m = new Map();
+        // 创建一个非空 map
+        let m2 = new Map([
+            ['name', '尚硅谷'],
+            ['slogon', '不断提高行业标准']
+        ]);
+        // 1. size 返回 Map 的元素个数；
+        console.log(m2.size);
+        // 2. set 增加一个新元素，返回当前 Map；
+        m.set('name', '简隋英');
+        m.set('liyu', function () {
+            console.log('李玉');
+        });
+        let key = {
+            team: '188'
+        };
+        m.set(key, ['邵群', '李程秀']);
+        console.log(m);
+        // 3. get 返回键名对象的键值；
+        console.log(m.get("liyu"));
+        // 4. has 检测 Map 中是否包含某个元素，返回 boolean 值；
+        console.log(m.has("name"));
+        //5.删除
+        m2.delete('name');
+        // 6. clear 清空集合，返回 undefined；
+        let m3 = new Map([
+            ['name', '尚硅谷'],
+            ['slogon', '不断提高行业标准']
+        ]);
+        m3.clear();
+        console.log(m);
+
+        //遍历
+        for (let v of m) {
+            console.log(v);//每一个键值对都是以数组形式输出的
+        }
+
+14、class类
+（结合pink老师讲的类一起看）
+概述：
+ES6 提供了更接近传统语言的写法，引入了 Class（类）这个概念，作为对象的模板。通过 class 关键
+字，可以定义类。基本上，ES6 的 class 可以看作只是一个语法糖，它的绝大部分功能，ES5 都可以做
+到，新的 class 写法只是让对象原型的写法更加清晰、更像面向对象编程的语法而已；
+知识点：
+1. class 声明类；
+2. constructor 定义构造函数初始化；
+3. extends 继承父类；
+4. super 调用父级构造方法；
+5. static 定义静态方法和属性；
+6. 父类方法可以重写；
+
+实例化一个对象：
+        // 手机 ES5写法：用构造函数实例化对象
+        // function Phone(brand,price){
+        // this.brand = brand;
+        // this.price = price;
+        // }
+        // // 添加方法
+        // Phone.prototype.call = function(){
+        // console.log("我可以打电话！");
+        // }
+        // // 实例化对象
+        // let HuaWei = new Phone("华为",5999);
+        // HuaWei.call();
+        // console.log(HuaWei);
+        // ES6写法：用类实例化对象
+        class Phone {
+            // 构造方法，名字是固定的
+            constructor(brand, price) {
+                this.brand = brand;
+                this.price = price;
+            }
+            // 打电话，方法必须使用该方式写
+            call() {
+                console.log("我可以打电话！");
+            }
+        }
+        let HuaWei = new Phone("华为", 5999);
+        HuaWei.call();
+        console.log(HuaWei);
+
+class静态成员：
+在类的外面再定义的属性，这两个属性属于类，不属于实例对象，是静态成员
+class里对于static标注的属性和方法，它属于类不属于实例对象，是静态成员
+// class静态成员
+        // ES5写法
+        // function Phone(){}
+        //在类的外面再定义的属性，这两个属性属于类，不属于实例对象，是静态成员
+        // Phone.name = "手机";
+        // Phone.change = function(){
+        // console.log("我可以改变世界！");
+        // }
+        // let nokia = new Phone();
+        // console.log(nokia.name); // undefined
+        // // nokia.change();
+        // // 报错：Uncaught TypeError: nokia.change is not a function
+        // Phone.prototype.color = "黑色";
+        // console.log(nokia.color); // 黑色，切记不要加“”，会输出字符串
+        // console.log(Phone.name);//手机
+        // Phone.change();//我可以改变世界！
+        // 注意：实例对象和函数对象的属性是不相通的
+        // ES6写法
+        class Phone {
+            // 静态属性 static ，class里对于static标注的属性和方法，它属于类不属于实例对象
+            static name = "手机";
+            static change() {
+                console.log("我可以改变世界！");
+            }
+        }
+        let nokia = new Phone();
+        console.log(nokia.name);//undifined
+        console.log(Phone.name);//手机
+        Phone.change();
+ES5构造函数实现继承：
+代码实现：
+//手机
+        function Phone(brand, price) {
+            this.brand = brand;
+            this.price = price;
+        }
+        Phone.prototype.call = function () {
+            console.log("我可以打电话");
+        }
+        //智能手机
+        function SmartPhone(brand, price, color, size) {
+            //call可以改变函数的this指向，当前this指向SmartPhone声明的实例对象
+            Phone.call(this, brand, price);
+            this.color = color;
+            this.size = size;
+        }
+        //设置子级构造函数的原型,这样SmartPhone创造的实例对象就可以调用父级的方法，原型链
+        SmartPhone.prototype = new Phone;
+        // console.log(SmartPhone.prototype.constructor);//不加 SmartPhone.prototype.constructor = SmartPhone;输出的是Phone构造函数
+        SmartPhone.prototype.constructor = SmartPhone;//老师说这句话可加可不加
+        //声明子类的方法
+        SmartPhone.prototype.photo = function () {
+            console.log("我可以拍照");
+        }
+
+        const chuizi = new SmartPhone('锤子', 2599, '黑色', '5.5inch');
+        // console.log(chuizi.__proto__.constructor);//不加 SmartPhone.prototype.constructor = SmartPhone;输出的是Phone构造函数
+        console.log(chuizi);
+
+ES6class类继承：
+ class Phone {
+            //构造方法
+            constructor(brand, price) {
+                this.brand = brand;
+                this.price = price;
+            }
+            //父类的成员属性
+            call() {
+                console.log("我可以打电话");
+            }
+        }
+
+        class SmartPhone extends Phone {
+            //构造方法
+            constructor(brand, price, color, size) {
+                super(brand, price);//相当于构造函数继承里的Phone.call(this,brand,price)一样，子类调用父类构造方法
+                this.color = color;
+                this.size = size;
+            }
+            photo() {
+                console.log("拍照");
+            }
+        }
+
+        const xiaomi = new SmartPhone('小米', 1799, '黑色', '4.7inch');
+        console.log(xiaomi);
+        xiaomi.call();
+
+子类对父类方法重写：
+class Phone {
+            //构造方法
+            constructor(brand, price) {
+                this.brand = brand;
+                this.price = price;
+            }
+            //父类的成员属性
+            call() {
+                console.log("我可以打电话");
+            }
+        }
+
+        class SmartPhone extends Phone {
+            //构造方法
+            constructor(brand, price, color, size) {
+                super(brand, price);//相当于构造函数继承里的Phone.call(this,brand,price)一样，子类调用父类构造方法
+                this.color = color;
+                this.size = size;
+            }
+            photo() {
+                console.log("拍照");
+            }
+            // 子类对父类方法重写:在子类里声明一个和父类同名的方法
+            // 直接写，直接覆盖
+            // 注意：子类无法调用父类同名方法，用super（）也没用
+            call() {
+                // super();//会报错
+                console.log('我可以进行视频通话');
+            }
+        }
+
+        const xiaomi = new SmartPhone('小米', 1799, '黑色', '4.7inch');
+        console.log(xiaomi);
+        xiaomi.call();
+
+
+class中的getter和setter设置：
+//get 和 set ：可以对对象的一个属性进行方法的绑定
+        class Phone {//类里没有构造函数constructor也是合法的
+            //添加一个get方法，当对对象的一个属性进行获取时，就会执行get对应的函数
+            get price() {
+                console.log('价格属性被读取了');
+                return 'iloveyou';
+            }
+            //添加一个set方法，当对对象的一个属性进行设置时，就会执行set对应的函数
+            //set的属性必须要有一个参数，不然报错
+            set price(newVal) {
+                console.log('价格属性被修改了');
+                return 'iloveyou';
+            }
+        }
+        //实例化对象
+        let s = new Phone();
+        //获取s.price，触发get绑定的price函数，返回值为函数里return的内容
+        console.log(s.price);
+        s.price = 'free';
+
+
+15.数值扩展
+Number.EPSILON：
+Number.EPSILON 是 JavaScript 表示的最小精度；
+EPSILON 属性的值接近于 2.2204460492503130808472633361816E-16；
+
+二进制和八进制：
+ES6 提供了二进制和八进制数值的新的写法，分别用前缀 0b 和 0o 表示；
+
+Number.isFinite() 与 Number.isNaN() ：
+Number.isFinite() 用来检查一个数值是否为有限的；
+Number.isNaN() 用来检查一个值是否为 NaN；
+
+Number.parseInt() 与 Number.parseFloat()：
+ES6 将全局方法 parseInt 和 parseFloat，移植到 Number 对象上面，使用不变；
+
+Math.trunc：
+用于去除一个数的小数部分，返回整数部分；
+
+Number.isInteger：
+Number.isInteger() 用来判断一个数值是否为整数；
+
+// 数值扩展
+        // 0. Number.EPSILON 是 JavaScript 表示的最小精度(当两个数差值小于这个数，就认为它俩是相等的)
+        // EPSILON 属性的值接近于 2.2204460492503130808472633361816E-16(非常小的数)
+        // function equal(a, b){
+        // return Math.abs(a-b) < Number.EPSILON;
+        // }
+        console.log("0、Number.EPSILON 是 JavaScript 表示的最小精度");
+        // 箭头函数简化写法
+        equal = (a, b) => Math.abs(a - b) < Number.EPSILON;
+        console.log(0.1 + 0.2);
+        console.log(0.1 + 0.2 === 0.3); // false
+        console.log(equal(0.1 + 0.2, 0.3)); // true
+        // 1. 二进制和八进制
+        console.log("1、二进制和八进制");
+        let b = 0b1010;
+        let o = 0o777;
+        let d = 100;
+        let x = 0xff;
+        console.log(x);
+        // 2. Number.isFinite 检测一个数值是否为有限数
+        console.log("2、Number.isFinite 检测一个数值是否为有限数");
+        console.log(Number.isFinite(100));//true
+        console.log(Number.isFinite(100 / 0));//false
+        console.log(Number.isFinite(Infinity));//false
+        // 3. Number.isNaN 检测一个数值是否为 NaN
+        console.log("3. Number.isNaN 检测一个数值是否为 NaN");
+        console.log(Number.isNaN(123));//false
+        // 4. Number.parseInt Number.parseFloat字符串转整数
+        console.log("4. Number.parseInt Number.parseFloat字符串转整数");
+        console.log(Number.parseInt('5211314love'));//5211314
+        console.log(Number.parseFloat('3.1415926神奇'));//3.1415926
+        // 5. Number.isInteger 判断一个数是否为整数
+        console.log("5. Number.isInteger 判断一个数是否为整数");
+        console.log(Number.isInteger(5));
+        console.log(Number.isInteger(2.5));
+        // 6. Math.trunc 将数字的小数部分抹掉
+        console.log("6. Math.trunc 将数字的小数部分抹掉 ");
+        console.log(Math.trunc(3.5));//3
+        // 7. Math.sign 判断一个数到底为正数 负数 还是零
+        console.log("7. Math.sign 判断一个数到底为正数 负数 还是零");
+        console.log(Math.sign(100));//1
+        console.log(Math.sign(0));//0
+        console.log(Math.sign(-20000));//-1
+
+16、对象扩展
+概述：
+ES6 新增了一些 Object 对象的方法：
+1. Object.is 比较两个值是否严格相等，与『===』行为基本一致（+0 与 NaN）；
+2. Object.assign 对象的合并，将源对象的所有可枚举属性，复制到目标对象；
+3. proto、setPrototypeOf、 setPrototypeOf 可以直接设置对象的原型；
+// 对象扩展
+        // 1. Object.is 比较两个值是否严格相等，与『===』行为基本一致（+0 与 NaN）；
+        console.log(Object.is(120, 120)); // ===
+        // 注意下面的区别
+        console.log(Object.is(NaN, NaN));//true
+        console.log(NaN === NaN);//false
+        // NaN与任何数值做===比较都是false，跟他自己也如此！
+        // 2. Object.assign 对象的合并，将源对象的所有可枚举属性，复制到目标对象；
+        const config1 = {
+            host: "localhost",
+            port: 3306,
+            name: "root",
+            pass: "root",
+            test: "test" // 唯一存在
+        }
+        const config2 = {
+            host: "http://zibo.com",
+            port: 300300600,
+            name: "root4444",
+            pass: "root4444",
+            test2: "test2"
+        }
+        // 如果前边有后边没有会添加，如果前后都有，后面的会覆盖前面的
+        console.log(Object.assign(config1, config2));
+        // 3. __proto__、setPrototypeOf、 getPrototypeOf 可以直接设置对象的原型；
+        //Object.setPrototypeOf 设置原型对象 Object.getPrototypeOf 获取的原型对象
+        const school = {
+            name: "尚硅谷"
+        }
+        const cities = {
+            xiaoqu: ['北京', '上海', '深圳']
+        }
+        // 并不建议这么做
+        //给school对象设置原型
+        Object.setPrototypeOf(school, cities);
+        //获取school的原型对象
+        console.log(Object.getPrototypeOf(school));
+        console.log(school);
+
+17、模块化
+概述：
+模块化是指将一个大的程序文件，拆分成许多小的文件，然后将小文件（小文件就是模块）组合起来；
+
+模块化的好处：
+模块化的优势有以下几点：
+1. 防止命名冲突；
+2. 代码复用；（把一些功能代码封装成一个文件，像封装函数一样，对外暴露一个接口）
+3. 高维护性；
+
+模块化规范产品：
+ES6 之前的模块化规范有：
+1. CommonJS => NodeJS、Browserify；
+2. AMD => requireJS；
+3. CMD => seaJS；
+CommonJS、AMD、CMD都是规范，都是纸面上的一些东西
+NodeJS、Browserif、 requireJS、seaJS是规范对应的产品
+
+ES6 模块化语法：
+模块功能主要由两个命令构成：export 和 import；
+export 命令用于规定模块的对外接口（导出模块）；
+import 命令用于输入其他模块提供的功能（导入模块）；
+简单使用：
+m.js（导出模块）：
+当你需要暴露数据时让外部模块可以使用这个模块里面的变量和函数时，只需要在数据前加一个export
+》》m.js
+
+export let school = "尚硅谷";
+export function teach(){
+console.log("我们可以教你开发技术！");
+}
+模块化.html（导入和使用模块）：
+ <title>模块化</title>
+</head>
+
+<body>
+    <!-- 原来直接引入js文件 -->
+    <!-- <script src="./src/js/m.js"></script> -->
+    <!-- 导入模块方法 -->
+    <script type="module">
+        // 引入m.js模块内容（通用方法）
+        import * as m from "./src/js/m.js";
+        console.log(m);
+        console.log(m.school);
+        m.teach();
+    </script>
+</body>
+
+
+ES6暴露数据语法汇总：
+m.js（逐个导出模块）：
+// 分别暴露（导出）
+export let school = "尚硅谷";
+export function teach(){
+console.log("我们可以教你开发技术！");
+}
+n.js（统一导出模块）：
+// 统一暴露（导出）
+let school = "尚硅谷";
+function findJob(){
+console.log("我们可以帮你找到好工作！");
+}
+export {school,findJob}
+o.js（默认导出模块）：
+// 默认暴露（导出）export default{}内的暴露数据可以是任意类型，当前以对象举例
+export default{
+school : "尚硅谷",
+change : function(){
+console.log("我们可以帮你改变人生！");
+}
+}
+模块化.html（引入和使用模块）：
+ <title>模块化</title>
+</head>
+
+<body>
+    <script type="module">
+        // 引入m.js模块内容
+        import * as m from "./js/m.js";
+        console.log(m);
+        console.log(m.school);
+        m.teach();
+        // 引入n.js模块内容
+        import * as n from "./js/n.js";
+        console.log(n);
+        console.log(n.school);
+        n.findJob();
+        // 引入o.js模块内容
+        import * as o from "./js/o.js";
+        console.log(o);
+        // 注意这里调用属性方法的时候需要加上default
+        console.log(o.default.school);
+        o.default.change();
+    </script>
+
+
+
+ES6导入模块语法汇总：
+模块化.html：
+<script type="module">
+        // 1.通用方式
+        // 引入m.js模块内容
+        import * as m from "./js/m.js";
+        console.log(m);
+        console.log(m.school);
+        m.teach();
+        // 引入n.js模块内容
+        import * as n from "./js/n.js";
+        console.log(n);
+        console.log(n.school);
+        n.findJob();
+        // 引入o.js模块内容
+        import * as o from "./js/o.js";
+        console.log(o);
+        // 注意这里调用方法的时候需要加上default
+        console.log(o.default.school);
+        o.default.change();
+        // 2.解构赋值形式，这个对应分别暴露   {}内添加要暴露的数据的名称，
+        import { school, teach } from "./js/m.js";
+        // 重名的可以使用别名，重名的话会报错，这个对应统一暴露
+        import { school as xuexiao, findJob } from "./js/n.js";
+        // 导入默认导出的模块，必须使用别名  o输出的结果是一个对象，对象里有一个属性是default，default里面存了school、change（），所以default必须使用别名
+        import { default as one } from "./js/o.js";
+        // 暴露数据直接可以使用，但是默认暴露还是要加default的别名
+        console.log(school);
+        teach();
+        console.log(xuexiao);
+        console.log(one);
+        console.log(one.school);
+        one.change();
+        // 3.简便形式，只支持默认导出（默认暴露），暴露数据还是要加default的别名
+        import oh from "./js/o.js";
+        console.log(oh);
+        console.log(oh.school);
+        oh.change();
+    </script>
+
+
+使用模块化的另一种方式：
+将js语法整合到一个文件app.js：
+// 通用方式
+// 引入m.js模块内容
+import * as m from "./m.js";
+console.log(m);
+console.log(m.school);
+m.teach();
+使用模块化的另一种方式.html：
+<body>
+    <script src="./js/app.js" type="module"></script>
+</body>
+
